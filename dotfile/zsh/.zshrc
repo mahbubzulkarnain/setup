@@ -41,6 +41,27 @@ pk(){
 # Alias live-server
 alias boom="live-server --host=localhost"
 
+# Alias build
+
+# Docker image
+alias doi='docker images'
+alias doirm='docker image rm'
+alias doils='docker image ls'
+
+# Alias for pull docker image
+alias dop='docker pull'
+
+# Alias for pull docker image
+alias dol='docker ps -l'
+
+# Docker container
+alias doc='docker container'
+alias docls='docker container ls'
+alias doclog='docker container logs --tail'
+alias docstop='docker container rm -f $(docker ps -aq)'
+
+alias donls='docker network ls'
+
 # TERM Color
 export TERM="xterm-256color"
 
