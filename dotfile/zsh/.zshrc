@@ -62,6 +62,9 @@ alias docstop='docker container rm -f $(docker ps -aq)'
 
 alias donls='docker network ls'
 
+# Alias for show golang test coverage
+alias got='go tool cover -html=coverage.out'
+
 # TERM Color
 export TERM="xterm-256color"
 
