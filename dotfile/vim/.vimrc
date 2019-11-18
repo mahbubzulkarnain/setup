@@ -150,6 +150,7 @@ runtime macros/matchit.vim
 
 set directory^=$HOME/.vim/tmp//
 
+" == VIM PLUG ================================
 " Specify a directory for plugins
 " - For Neovim: stdpath('data') . '/plugged'
 " - Avoid using standard Vim directory names like 'plugin'
@@ -166,8 +167,20 @@ Plug 'neoclide/coc.nvim', {'tag': '*', 'branch': 'release'}
 " Or build from source code by use yarn: https://yarnpkg.com
 Plug 'neoclide/coc.nvim', {'do': 'yarn install --frozen-lockfile'}
 
+"------------------------ VIM TSX ------------------------
+" coc extensions
+let g:coc_global_extensions = ['coc-tslint-plugin', 'coc-tsserver', 'coc-emmet', 'coc-css', 'coc-html', 'coc-json', 'coc-yank', 'coc-prettier', 'coc-go']
+
+" vim-tsx will do all the coloring for jsx in the .tsx file
+Plug 'ianks/vim-tsx'
+
+" typescript-vim will do all the coloring for typescript keywords
+Plug 'leafgarland/typescript-vim'
+"------------------------ VIM TSX ------------------------
+
 " Initialize plugin system
 call plug#end()
+" == VIMPLUG END ================================
 
 " -------------------------------------------------------------------------------------------------
 " coc.nvim default settings
@@ -239,3 +252,10 @@ nnoremap <silent> <space>p  :<C-u>CocListResume<CR>
 " disable vim-go :GoDef short cut (gd)
 " this is handled by LanguageClient [LC]
 let g:go_def_mapping_enabled = 0
+
+" == AUTOCMD ================================
+" by default .ts file are not identified as typescript and .tsx files are not
+" identified as typescript react file, so add following
+au BufNewFile,BufRead *.ts setlocal filetype=typescript
+au BufNewFile,BufRead *.tsx setlocal filetype=typescript.tsx
+" == AUTOCMD END ================================
