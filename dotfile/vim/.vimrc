@@ -38,6 +38,12 @@ augroup scroll
     au  VimLeave * :silent !synclient VertEdgeScroll=1
 augroup END
 
+" Automatic reloading .vimrc
+augroup autosourcing
+  autocmd!
+  autocmd! bufwritepost *.vim source %
+augroup end
+
 " Line numbers
 set number
 
@@ -49,7 +55,7 @@ set lines=30
 set columns=125
 
 colorscheme one
-set background=dark
+set background=light
 
 " Loads indent.vim. The result is when a file is edited its indent file is
 " loaded

@@ -65,8 +65,11 @@ alias donls='docker network ls'
 # Alias for show golang test coverage
 alias got='go test -cover'
 
-# Alias for vim
-alias vim='/usr/local/Cellar/macvim/8.1-161/bin/vim'
+# Alias for mvim
+alias v='mvim'
+
+# Alias for mkdir and cd
+mkcd() { mkdir -p "$@" && cd "$@"; }
 
 # TERM Color
 export TERM="xterm-256color"
