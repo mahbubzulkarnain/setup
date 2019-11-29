@@ -1,5 +1,9 @@
 #!/usr/bin/env bash
 
+echo "Setting up Git global"
+wget -q https://raw.githubusercontent.com/mahbubzulkarnain/setup/master/dotfile/gitignore/.gitignore_global -O ~/.gitignore_global
+git config --global core.excludesfile ~/.gitignore_global
+
 echo "Setting up Git aliases..."
 git config --global alias.gst git status
 git config --global alias.st status
