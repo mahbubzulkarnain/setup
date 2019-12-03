@@ -38,6 +38,18 @@ pk(){
   lsof -P | grep '$(:$1)' | awk '{print $2}' | xargs kill -9
 }
 
+# Alias for git log since 14 days ago
+gils() {
+    AUTHOR=${AUTHOR:="`git config user.name`"}
+
+    since=yesterday
+    if [[ $(date +%u) == 1 ]] ; then
+        since="14 days ago"
+    fi
+
+    git log --all --since "$since" --oneline --author="$AUTHOR"
+}
+
 # Alias live-server
 alias boom="live-server --host=localhost"
 
