@@ -17,6 +17,7 @@ brew install git
 
 echo "Install java..."
 brew cask install java
+brew install maven
 
 brew install wget
 #brew cask install vlc
