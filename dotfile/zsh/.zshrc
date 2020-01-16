@@ -97,9 +97,10 @@ esac
 
 # Golang
 export GOPATH=~/Systems/Golang
+export GOROOT=/usr/local/opt/go/libexec
 
 # If you come from bash you might have to change your $PATH.
-export PATH=$HOME/bin:/usr/local/bin:$GOPATH/bin:$PATH
+export PATH=$HOME/bin:/usr/local/bin:$GOPATH/bin:$GOROOT/bin:$PATH
 
 # Path to your oh-my-zsh installation.
 export ZSH=$HOME/.oh-my-zsh
