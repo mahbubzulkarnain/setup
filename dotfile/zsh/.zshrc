@@ -83,6 +83,12 @@ alias v='mvim'
 # Alias for mkdir and cd
 mkcd() { mkdir -p "$@" && cd "$@"; }
 
+# Alias for rails
+alias r='rails'
+
+# Alias for rails development
+rdev() { rails "$@" RAILS_ENV=development; }
+
 # TERM Color
 export TERM="xterm-256color"
 
