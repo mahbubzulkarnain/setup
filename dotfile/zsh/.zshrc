@@ -89,6 +89,12 @@ alias r='rails'
 # Alias for rails development
 rdev() { rails "$@" RAILS_ENV=development; }
 
+# Alias for rails production
+rprod() { rails "$@" RAILS_ENV=production; }
+
+# Alias for rails test
+rtest() { rails "$@" RAILS_ENV=test; }
+
 # TERM Color
 export TERM="xterm-256color"
 
