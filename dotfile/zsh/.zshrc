@@ -83,6 +83,9 @@ alias v='mvim'
 # Alias for mkdir and cd
 mkcd() { mkdir -p "$@" && cd "$@"; }
 
+# Alias for heroku
+alias h='heroku'
+
 # Alias for rails
 alias r='rails'
 
