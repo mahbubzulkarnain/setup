@@ -86,6 +86,9 @@ mkcd() { mkdir -p "$@" && cd "$@"; }
 # Alias for heroku
 alias h='heroku'
 
+# Alias for rubocop
+alias ru='rubocop -x && rubocop -a'
+
 # Alias for rails
 alias r='rails'
 
