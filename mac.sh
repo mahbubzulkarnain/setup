@@ -41,6 +41,7 @@ echo "Install NodeJS v10.16.0"
 nvm install v12.14.1
 
 wget -O - https://raw.githubusercontent.com/mahbubzulkarnain/setup/master/npm.sh | bash
+wget -O - https://raw.githubusercontent.com/mahbubzulkarnain/setup/master/gem.sh | bash
 
 echo "Installing Development Tools..."
 brew cask install insomnia
