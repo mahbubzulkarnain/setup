@@ -23,6 +23,11 @@ wget -O - https://raw.githubusercontent.com/mahbubzulkarnain/setup/master/mac.sh
 wget -O - https://raw.githubusercontent.com/mahbubzulkarnain/setup/master/npm.sh | bash
 ```
 
+###### GEM
+```
+wget -O - https://raw.githubusercontent.com/mahbubzulkarnain/setup/master/gem.sh | bash
+```
+
 ###### VIM
 ```
 wget -O - https://raw.githubusercontent.com/mahbubzulkarnain/setup/master/vim.sh | bash
