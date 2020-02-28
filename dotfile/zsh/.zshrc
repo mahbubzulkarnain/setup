@@ -89,6 +89,9 @@ alias h='heroku'
 # Alias for rubocop
 alias ru='rubocop -x && rubocop -a'
 
+# Alias for rubocop and rails_best_practices
+alias rc='ru && rails_best_practices'
+
 # Alias for rails
 alias r='rails'
 
