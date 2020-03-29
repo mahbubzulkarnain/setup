@@ -9,12 +9,12 @@ sudo chown -R $(whoami) /usr/local/bin
 cd ~
 
 if [[ "$OSTYPE" == "linux-gnu" ]]; then
-    wget -O - https://raw.githubusercontent.com/mahbubzulkarnain/setup/master/debian.sh | bash
+    bash <(curl -s https://raw.githubusercontent.com/mahbubzulkarnain/setup/master/debian.sh)
 elif [[ "$OSTYPE" == "darwin"* ]]; then
-    wget -O - https://raw.githubusercontent.com/mahbubzulkarnain/setup/master/mac.sh | bash
+    bash <(curl -s https://raw.githubusercontent.com/mahbubzulkarnain/setup/master/mac.sh)
 fi
 
-wget -O - https://raw.githubusercontent.com/mahbubzulkarnain/setup/master/git.sh | bash
+bash <(curl -s https://raw.githubusercontent.com/mahbubzulkarnain/setup/master/git.sh)
 
 echo "Link start!!!"
 
