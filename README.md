@@ -5,35 +5,35 @@
 
 
 ```
-wget -O - https://raw.githubusercontent.com/mahbubzulkarnain/setup/master/install.sh | bash
+bash <(curl -s https://raw.githubusercontent.com/mahbubzulkarnain/setup/master/install.sh)
  ```
 
 ###### Debian
 ```
-wget -O - https://raw.githubusercontent.com/mahbubzulkarnain/setup/master/debian.sh | bash
+bash <(curl -s https://raw.githubusercontent.com/mahbubzulkarnain/setup/master/debian.sh)
 ```
 
 ###### Mac
 ```
-wget -O - https://raw.githubusercontent.com/mahbubzulkarnain/setup/master/mac.sh | bash
+bash <(curl -s https://raw.githubusercontent.com/mahbubzulkarnain/setup/master/mac.sh)
 ```
 
 ###### NPM
 ```
-wget -O - https://raw.githubusercontent.com/mahbubzulkarnain/setup/master/npm.sh | bash
+bash <(curl -s https://raw.githubusercontent.com/mahbubzulkarnain/setup/master/npm.sh)
 ```
 
 ###### GEM
 ```
-wget -O - https://raw.githubusercontent.com/mahbubzulkarnain/setup/master/gem.sh | bash
+bash <(curl -s https://raw.githubusercontent.com/mahbubzulkarnain/setup/master/gem.sh)
 ```
 
 ###### VIM
 ```
-wget -O - https://raw.githubusercontent.com/mahbubzulkarnain/setup/master/vim.sh | bash
+bash <(curl -s https://raw.githubusercontent.com/mahbubzulkarnain/setup/master/vim.sh)
 ```
 
 ###### ZSH
 ```
-wget -O - https://raw.githubusercontent.com/mahbubzulkarnain/setup/master/zsh.sh | bash
+bash <(curl -s https://raw.githubusercontent.com/mahbubzulkarnain/setup/master/zsh.sh)
 ```
