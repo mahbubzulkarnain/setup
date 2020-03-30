@@ -41,6 +41,13 @@ echo "Install NodeJS v10.16.0"
 nvm install v12.14.1
 
 wget -O - https://raw.githubusercontent.com/mahbubzulkarnain/setup/master/npm.sh | bash
+
+echo "Install ruby..."
+echo "gem: --no-document" >> ~/.gemrc
+curl -L https://get.rvm.io | bash -s stable --auto-dotfiles --autolibs=enable --rails
+rvm get stable --autolibs=enable --auto-dotfiles
+rvm install 2.6.5
+rvm use 2.6.5 --default
 wget -O - https://raw.githubusercontent.com/mahbubzulkarnain/setup/master/gem.sh | bash
 
 echo "Installing Development Tools..."
@@ -67,7 +74,7 @@ brew install docker
 brew install postgres
 brew install redis
 brew install mongodb
-brew install php
+#brew install php
 brew install go
 brew install elasticsearch
 
