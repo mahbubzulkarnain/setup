@@ -92,9 +92,6 @@ alias h='heroku'
 # Alias for rubocop
 alias ru='rubocop -x && rubocop -a'
 
-# Alias for rubocop and rails_best_practices
-alias rc='ru && rails_best_practices'
-
 # Alias for rails
 alias r='rails'
 
@@ -106,6 +103,9 @@ rprod() { rails "$@" RAILS_ENV=production; }
 
 # Alias for rails test
 rtest() { rails "$@" RAILS_ENV=test; }
+
+# Alias for rails credential edit
+alias rce='EDITOR=nano rails credentials:edit'
 
 # TERM Color
 export TERM="xterm-256color"
