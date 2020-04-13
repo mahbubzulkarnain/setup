@@ -37,8 +37,8 @@ wget -O - https://raw.githubusercontent.com/mahbubzulkarnain/setup/master/zsh.sh
 echo "Install NVM..."
 brew install nvm
 
-echo "Install NodeJS v10.16.0"
-nvm install v12.14.1
+echo "Install NodeJS LTS Version"
+nvm install v12.16.2
 
 wget -O - https://raw.githubusercontent.com/mahbubzulkarnain/setup/master/npm.sh | bash
 
