@@ -25,8 +25,8 @@ alias gip='git pull origin'
 # Alias for git log
 alias gil='git log --graph --oneline --decorate --all'
 
-# Alias for git reset head
-alias gir='git reset HEAD'
+# Alias for git restore
+alias gir='git restore --staged'
 
 # Alias for git verbose
 alias girv='git remote --verbose'
