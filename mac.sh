@@ -78,11 +78,9 @@ brew install mongodb
 brew install go
 brew install elasticsearch
 
-echo "Install google chrome..."
-brew cask install google-chrome
-brew cask install torbrowser
-
-brew install tor
+echo "Install browser..."
+brew cask install --appdir="/Applications" google-chrome
+brew cask install --appdir="/Applications" tor-browser
 
 echo "Install Social..."
 brew cask install whatsapp
