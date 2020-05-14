@@ -1,6 +1,9 @@
 # Alias native base custom theme init
 alias inb="node ./node_modules/native-base/ejectTheme.js"
 
+# Alias for show my device IP address
+alias ip='ifconfig | grep "inet "'
+
 # Alias for check connection
 alias p='ping 8.8.8.8'
 
