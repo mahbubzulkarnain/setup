@@ -73,10 +73,12 @@ brew cask install ngrok
 brew install docker
 brew install postgres
 brew install redis
-brew install mongodb
 #brew install php
 brew install go
 brew install elasticsearch
+
+brew tap mongodb/brew
+brew install mongodb-community
 
 echo "Install browser..."
 brew cask install --appdir="/Applications" google-chrome
