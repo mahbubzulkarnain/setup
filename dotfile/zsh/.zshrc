@@ -34,6 +34,17 @@ alias gir='git restore --staged'
 # Alias for git verbose
 alias girv='git remote --verbose'
 
+# Alias for ignore update file status on
+giion(){
+  git update-index --assume-unchanged $1
+}
+
+# Alias for ignore update file status off
+giioff(){
+  git update-index --no-assume-unchanged $1
+}
+
+
 # Alias for clone github
 clone(){
   git clone $1 && cd $(basename $1 .git)
