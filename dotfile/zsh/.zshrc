@@ -92,7 +92,10 @@ alias docstop='docker container rm -f $(docker ps -aq)'
 alias donls='docker network ls'
 
 # Alias for show golang test coverage
-alias got='go test -cover'
+alias gotc='go test -cover'
+
+# Alias for run golang test
+alias got='go test ./... -v'
 
 # Alias for mvim
 alias v='mvim'
