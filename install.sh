@@ -5,6 +5,7 @@ mkdir ~/Project
 mkdir ~/Tools
 mkdir ~/Learn
 mkdir ~/Example
+mkdir ~/Systems
 
 sudo chown -R $(whoami) /usr/local/bin
 cd ~
