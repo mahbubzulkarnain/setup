@@ -140,8 +140,12 @@ export PATH=$PATH:$ANDROID_HOME/tools
 export PATH=$PATH:$ANDROID_HOME/tools/bin
 export PATH=$PATH:$ANDROID_HOME/platform-tools
 
+# Flutter
+export FLUTTERROOT=$HOME/Systems/flutter
+export PATH=$PATH:$FLUTTERROOT/bin
+
 # Golang
-export GOPATH=~/Systems/Golang
+export GOPATH=$HOME/Systems/Golang
 export GOROOT=/usr/local/opt/go/libexec
 
 # If you come from bash you might have to change your $PATH.
