@@ -97,6 +97,9 @@ alias gotc='go test -cover'
 # Alias for run golang test
 alias got='go test ./... -v'
 
+# Alias for run golangci-lint
+alias goclint="golangci-lint run --exclude-use-default=false --enable=golint	--enable=gocyclo --enable=goconst --enable=unconvert ./..."
+
 # Alias for mvim
 alias v='mvim'
 
