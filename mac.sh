@@ -29,6 +29,11 @@ brew install wget
 echo "Install markdown ide..."
 brew cask install macdown
 
+# echo "Install flutter..."
+# cd ~/Systems/
+# git clone https://github.com/flutter/flutter.git -b stable --depth 1
+# cd ~
+
 echo "Install iterm..."
 # brew cask install iterm2
 brew install zsh zsh-completions
