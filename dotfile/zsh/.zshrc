@@ -67,6 +67,11 @@ gils() {
     git log --all --since "$since" --oneline --author="$AUTHOR"
 }
 
+# php
+
+# phpbrew
+[[ -e ~/.phpbrew/zshrc ]] && source ~/.phpbrew/zshrc
+
 # Alias live-server
 alias boom="live-server --host=localhost"
 
