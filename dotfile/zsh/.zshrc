@@ -34,6 +34,9 @@ alias gir='git restore --staged'
 # Alias for git verbose
 alias girv='git remote --verbose'
 
+# Alias for remove git remote url, ex: girrm origin
+alias girrm='git remote rm'
+
 # Alias for ignore update file status on
 giion(){
   git update-index --assume-unchanged $1
