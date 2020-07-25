@@ -1,6 +1,6 @@
-# 💾 Setup 
+# 🚀 Setup 
 
-> 🚀 Setup for new computer/laptop
+> Setup for new computer/laptop
 
 
 
