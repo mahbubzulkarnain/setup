@@ -1,4 +1,4 @@
-# 💻 Setup 
+# 💾 Setup 
 
 > 🚀 Setup for new computer/laptop
 
