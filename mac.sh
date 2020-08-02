@@ -60,6 +60,9 @@ go get github.com/golang/lint/golint
 # rvm use 2.6.5 --default
 # wget -O - https://raw.githubusercontent.com/mahbubzulkarnain/setup/master/gem.sh | bash
 
+# echo "Install PHP..."
+# brew install composer
+
 echo "Installing Development Tools..."
 brew cask install insomnia
 brew cask install altair-graphql-client
