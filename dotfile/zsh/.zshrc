@@ -47,7 +47,6 @@ giioff(){
   git update-index --no-assume-unchanged $1
 }
 
-
 # Alias for clone github
 clone(){
   git clone $1 && cd $(basename $1 .git)
@@ -103,6 +102,9 @@ alias doclog='docker container logs --tail'
 alias docstop='docker container rm -f $(docker ps -aq)'
 
 alias donls='docker network ls'
+
+# Alias for nodemon run "go run main.go"
+alias gorun='nodemon --exec go run main.go --signal SIGTERM'
 
 # Alias for show golang test coverage
 alias gotc='go test -cover'
