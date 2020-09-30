@@ -37,3 +37,5 @@ bash <(curl -s https://raw.githubusercontent.com/mahbubzulkarnain/setup/master/v
 ```
 bash <(curl -s https://raw.githubusercontent.com/mahbubzulkarnain/setup/master/zsh.sh)
 ```
+
+[More ...](https://github.com/mahbubzulkarnain?tab=repositories&q=setup)
