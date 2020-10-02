@@ -103,6 +103,28 @@ alias docstop='docker container rm -f $(docker ps -aq)'
 
 alias donls='docker network ls'
 
+# Alias for Docker compose up
+alias dcrun='docker-compose up -d'
+
+# Alias for Docker compose up force rebuild
+alias dcrunf='docker-compose up -d --build'
+
+# Alias for Docker compose down
+alias dcdown='docker-compose down'
+
+# Alias for Docker compose down all volume
+alias dcdownv='docker-compose down -v'
+
+# Alias for Docker compose stop <service_name>
+alias dcstop='docker-compose stop'
+
+# Alias for Docker compose restart <service_name>
+alias dcrestart='docker-compose restart'
+
+# Alias for Docker compose show log <service_name>
+alias dclog='docker-compose logs -f'
+
+
 # Alias for nodemon run "go run main.go"
 alias gorun='nodemon --exec go run main.go --signal SIGTERM'
 
