@@ -71,13 +71,10 @@ gils() {
 
 # php
 
-# phpbrew
-[[ -e ~/.phpbrew/bashrc ]] && source ~/.phpbrew/bashrc
-
-export PHPBREW_SET_PROMPT=1
-export PHPBREW_RC_ENABLE=1
-
-source ~/.phpbrew/bashrc
+# init phpbrew bashrc
+# export PHPBREW_SET_PROMPT=1
+# export PHPBREW_RC_ENABLE=1
+# [[ -e ~/.phpbrew/bashrc ]] && source ~/.phpbrew/bashrc
 
 # Alias live-server
 alias boom="live-server --host=localhost"
