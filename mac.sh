@@ -71,6 +71,8 @@ brew install awscli
 # brew cask install sequel-pro
 # brew cask install postman
 
+# brew install kcat
+
 # brew cask install intellij-idea
 # brew cask install webstorm
 brew cask install goland
