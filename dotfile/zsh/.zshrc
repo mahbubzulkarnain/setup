@@ -135,7 +135,7 @@ alias got='go test ./... -v'
 
 # Alias for run golangci-lint
 # https://www.phillipsj.net/posts/enabling-staticcheck-in-goland/, Enabling Staticcheck in GoLand 
-alias goclint="golangci-lint run --exclude-use-default=false --enable=golint	--enable=gocyclo --enable=goconst --enable=unconvert ./... && staticcheck ./..."
+alias goclint="golangci-lint run --exclude=\"exported \\w+ (\\S*['.]*)([a-zA-Z'.*]*) should have comment or be unexported\" --exclude-use-default=false --enable=golint	--enable=gocyclo --enable=goconst --enable=unconvert ./... && staticcheck ./..."
 
 # Alias for mvim
 alias v='mvim'
