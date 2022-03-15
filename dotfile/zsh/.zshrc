@@ -47,12 +47,14 @@ giioff(){
   git update-index --no-assume-unchanged $1
 }
 
-# Alias for clone github
+# Alias for clone github, ex:
+# > clone github.com/mahbubzulkarnain/setup
 clone(){
   git clone $1 && cd $(basename $1 .git)
 }
 
-# Alias for terminate by port
+# Alias for terminate by port, ex:
+# > pk 3000
 pk(){
   lsof -P | grep '$(:$1)' | awk '{print $2}' | xargs kill -9
 }
@@ -132,7 +134,8 @@ alias gotc='go test -cover'
 alias got='go test ./... -v'
 
 # Alias for run golangci-lint
-alias goclint="golangci-lint run --exclude-use-default=false --enable=golint	--enable=gocyclo --enable=goconst --enable=unconvert ./..."
+# https://www.phillipsj.net/posts/enabling-staticcheck-in-goland/, Enabling Staticcheck in GoLand 
+alias goclint="golangci-lint run --exclude-use-default=false --enable=golint	--enable=gocyclo --enable=goconst --enable=unconvert ./... && staticcheck ./..."
 
 # Alias for mvim
 alias v='mvim'
@@ -181,12 +184,19 @@ export PATH=$PATH:$ANDROID_HOME/tools/bin
 export PATH=$PATH:$ANDROID_HOME/platform-tools
 
 # Flutter
-export FLUTTERROOT=$HOME/Systems/flutter
-export PATH=$PATH:$FLUTTERROOT/bin
+# export FLUTTERROOT=$HOME/Systems/flutter
+# export PATH=$PATH:$FLUTTERROOT/bin
 
 # Golang
 export GOPATH=$HOME/Systems/Golang
 export GOROOT=/usr/local/opt/go/libexec
+
+# Java
+export PATH="/usr/local/opt/openjdk/bin:$PATH"
+
+# Java Manager Version
+export PATH="$HOME/.jenv/bin:$PATH"
+eval "$(jenv init -)"
 
 # If you come from bash you might have to change your $PATH.
 export PATH=$HOME/bin:/usr/local/bin:$GOPATH/bin:$GOROOT/bin:$PATH
