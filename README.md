@@ -1,8 +1,6 @@
-# 🚀 Setup 
+# 🚀 Setup
 
 > Setup for new computer/laptop
-
-
 
 ```
 bash <(curl -s https://raw.githubusercontent.com/mahbubzulkarnain/setup/master/install.sh)
@@ -26,6 +24,11 @@ bash <(curl -s https://raw.githubusercontent.com/mahbubzulkarnain/setup/master/n
 ###### GEM
 ```
 bash <(curl -s https://raw.githubusercontent.com/mahbubzulkarnain/setup/master/gem.sh)
+```
+
+###### GO Module
+```
+bash <(curl -s https://raw.githubusercontent.com/mahbubzulkarnain/setup/master/gomod.sh)
 ```
 
 ###### VIM
