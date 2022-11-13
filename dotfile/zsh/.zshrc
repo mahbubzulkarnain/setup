@@ -141,7 +141,7 @@ alias goclint="golangci-lint run --exclude=\"exported \\w+ (\\S*['.]*)([a-zA-Z'.
 alias goslint="staticcheck ./..."
 
 # Alias for mvim
-alias v='mvim'
+# alias v='mvim'
 
 # Alias for mkdir and cd
 mkcd() { mkdir -p "$@" && cd "$@"; }
@@ -180,26 +180,26 @@ case $TERM in
 esac
 
 # Android
-export ANDROID_HOME=$HOME/Library/Android/sdk
-export PATH=$PATH:$ANDROID_HOME/emulator
-export PATH=$PATH:$ANDROID_HOME/tools
-export PATH=$PATH:$ANDROID_HOME/tools/bin
-export PATH=$PATH:$ANDROID_HOME/platform-tools
+# export ANDROID_HOME=$HOME/Library/Android/sdk
+# export PATH=$PATH:$ANDROID_HOME/emulator
+# export PATH=$PATH:$ANDROID_HOME/tools
+# export PATH=$PATH:$ANDROID_HOME/tools/bin
+# export PATH=$PATH:$ANDROID_HOME/platform-tools
 
 # Flutter
 # export FLUTTERROOT=$HOME/Systems/flutter
 # export PATH=$PATH:$FLUTTERROOT/bin
 
 # Golang
-export GOPATH=$HOME/Systems/Golang
-export GOROOT=/usr/local/opt/go/libexec
+# export GOPATH=$HOME/Systems/Golang
+# export GOROOT=/usr/local/opt/go/libexec
 
 # Java
-export PATH="/usr/local/opt/openjdk/bin:$PATH"
+# export PATH="/usr/local/opt/openjdk/bin:$PATH"
 
 # Java Manager Version
-export PATH="$HOME/.jenv/bin:$PATH"
-eval "$(jenv init -)"
+# export PATH="$HOME/.jenv/bin:$PATH"
+# eval "$(jenv init -)"
 
 # If you come from bash you might have to change your $PATH.
 export PATH=$HOME/bin:/usr/local/bin:$GOPATH/bin:$GOROOT/bin:$PATH
@@ -271,7 +271,7 @@ COMPLETION_WAITING_DOTS="true"
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
-plugins=(z git zsh-autosuggestions zsh-syntax-highlighting)
+plugins=(zsh-autosuggestions zsh-syntax-highlighting)
 
 source $ZSH/oh-my-zsh.sh
 
@@ -300,8 +300,6 @@ source $ZSH/oh-my-zsh.sh
 # Example aliases
 # alias zshconfig="mate ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
-
-. ~/.oh-my-zsh/plugins/z/z.sh
 
 export NVM_DIR="$HOME/.nvm"
   [ -s "/usr/local/opt/nvm/nvm.sh" ] && . "/usr/local/opt/nvm/nvm.sh"  # This loads nvm
