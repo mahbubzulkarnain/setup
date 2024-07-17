@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 echo "Setting up Git global"
-wget -q https://raw.githubusercontent.com/mahbubzulkarnain/setup/master/dotfile/gitignore/.gitignore_global -O ~/.gitignore_global
+curl -o ~/.gitignore_global https://raw.githubusercontent.com/mahbubzulkarnain/setup/master/dotfile/gitignore/.gitignore_global
 git config --global core.excludesfile ~/.gitignore_global
 
 # echo "Setting up Git aliases..."
