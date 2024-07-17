@@ -25,6 +25,9 @@ alias gibd='git branch -d'
 # Alias for git pull
 alias gip='git pull origin'
 
+# Alias for git push
+alias gipu='git push origin'
+
 # Alias for git log
 alias gil='git log --graph --oneline --decorate --all'
 
