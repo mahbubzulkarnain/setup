@@ -140,7 +140,7 @@ alias got='go test ./... -v'
 alias goclint="golangci-lint run --exclude=\"exported \\w+ (\\S*['.]*)([a-zA-Z'.*]*) should have comment or be unexported\" --exclude-use-default=false --enable=revive	--enable=gocyclo --enable=goconst --enable=unconvert ./..."
 
 # Alias for run staticcheck
-# https://www.phillipsj.net/posts/enabling-staticcheck-in-goland/, Enabling Staticcheck in GoLand 
+# https://www.phillipsj.net/posts/enabling-staticcheck-in-goland/, Enabling Staticcheck in GoLand
 alias goslint="staticcheck ./..."
 
 # Alias for mvim
@@ -205,7 +205,7 @@ esac
 # eval "$(jenv init -)"
 
 # If you come from bash you might have to change your $PATH.
-export PATH=$HOME/bin:/usr/local/bin:$GOPATH/bin:$GOROOT/bin:$PATH
+export PATH=$HOME/bin:/opt/homebrew/bin:/usr/local/bin:$GOPATH/bin:$GOROOT/bin:$PATH
 
 # Path to your oh-my-zsh installation.
 export ZSH=$HOME/.oh-my-zsh
@@ -277,6 +277,7 @@ COMPLETION_WAITING_DOTS="true"
 plugins=(git zsh-autosuggestions zsh-syntax-highlighting)
 
 source $ZSH/oh-my-zsh.sh
+source $(brew --prefix nvm)/nvm.sh
 
 # User configuration
 
@@ -307,3 +308,4 @@ source $ZSH/oh-my-zsh.sh
 export NVM_DIR="$HOME/.nvm"
   [ -s "/usr/local/opt/nvm/nvm.sh" ] && . "/usr/local/opt/nvm/nvm.sh"  # This loads nvm
   [ -s "/usr/local/opt/nvm/etc/bash_completion.d/nvm" ] && . "/usr/local/opt/nvm/etc/bash_completion.d/nvm"  # This loads nvm bash_completion
+export PATH="$HOME/Library/Android/sdk/cmdline-tools/latest/bin:$PATH"
