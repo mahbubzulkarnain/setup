@@ -170,6 +170,9 @@ rtest() { rails "$@" RAILS_ENV=test; }
 # Alias for rails credential edit
 alias rce='EDITOR=nano rails credentials:edit'
 
+# Alias for flutter
+alias flutter='fvm flutter'
+
 # TERM Color
 export TERM="xterm-256color"
 
@@ -274,7 +277,7 @@ COMPLETION_WAITING_DOTS="true"
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
-plugins=(git zsh-autosuggestions zsh-syntax-highlighting)
+plugins=(git zsh-autosuggestions zsh-syntax-highlighting 1password)
 
 source $ZSH/oh-my-zsh.sh
 source $(brew --prefix nvm)/nvm.sh
@@ -306,6 +309,11 @@ source $(brew --prefix nvm)/nvm.sh
 # alias ohmyzsh="mate ~/.oh-my-zsh"
 
 export NVM_DIR="$HOME/.nvm"
-  [ -s "/usr/local/opt/nvm/nvm.sh" ] && . "/usr/local/opt/nvm/nvm.sh"  # This loads nvm
-  [ -s "/usr/local/opt/nvm/etc/bash_completion.d/nvm" ] && . "/usr/local/opt/nvm/etc/bash_completion.d/nvm"  # This loads nvm bash_completion
+  [ -s "/opt/homebrew/opt/nvm/nvm.sh" ] && \. "/opt/homebrew/opt/nvm/nvm.sh"  # This loads nvm
+  [ -s "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm" ] && \. "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm"  # This loads nvm bash_completion
 export PATH="$HOME/Library/Android/sdk/cmdline-tools/latest/bin:$PATH"
+
+## [Completion]
+## Completion scripts setup. Remove the following line to uninstall
+[[ -f /Users/mahbubzulkarnain/.dart-cli-completion/zsh-config.zsh ]] && . /Users/mahbubzulkarnain/.dart-cli-completion/zsh-config.zsh || true
+## [/Completion]
