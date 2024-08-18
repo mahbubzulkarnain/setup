@@ -286,6 +286,7 @@ plugins=(git z zsh-autosuggestions zsh-syntax-highlighting 1password)
 
 source $ZSH/oh-my-zsh.sh
 source $(brew --prefix nvm)/nvm.sh
+source $(brew --prefix zsh-syntax-highlighting)/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 
 # User configuration
 
