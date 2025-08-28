@@ -1,7 +1,11 @@
 #!/usr/bin/env bash
 
 echo "Install ohmyzsh..."
-sh -c "$(wget https://raw.github.com/robbyrussell/oh-my-zsh/master/tools/install.sh -O -)"
+sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+
+if [[ "$OSTYPE" == "linux-gnu" ]]; then
+    sudo apt-get install -y fzf zsh-syntax-highlighting zsh-autosuggestions
+fi
 
 cd ~ || exit
 

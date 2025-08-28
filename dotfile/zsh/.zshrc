@@ -207,14 +207,6 @@ esac
 # export PATH="$HOME/.jenv/bin:$PATH"
 # eval "$(jenv init -)"
 
-# Sonar
-export SONAR_HOME=/usr/local/Cellar/sonar-scanner/6.1.0.4477/libexec
-export SONAR=$SONAR_HOME/bin
-export PATH=$SONAR:$PATH
-
-# If you come from bash you might have to change your $PATH.
-export PATH=$HOME/bin:/opt/homebrew/bin:/usr/local/bin:$GOPATH/bin:$GOROOT/bin:$PATH
-
 # Path to your oh-my-zsh installation.
 export ZSH=$HOME/.oh-my-zsh
 
@@ -285,8 +277,6 @@ COMPLETION_WAITING_DOTS="true"
 plugins=(git z zsh-autosuggestions zsh-syntax-highlighting 1password)
 
 source $ZSH/oh-my-zsh.sh
-source $(brew --prefix nvm)/nvm.sh
-source $(brew --prefix zsh-syntax-highlighting)/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 
 # User configuration
 
@@ -314,32 +304,52 @@ source $(brew --prefix zsh-syntax-highlighting)/share/zsh-syntax-highlighting/zs
 # alias zshconfig="mate ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
 
-export NVM_DIR="$HOME/.nvm"
-  [ -s "/opt/homebrew/opt/nvm/nvm.sh" ] && \. "/opt/homebrew/opt/nvm/nvm.sh"  # This loads nvm
-  [ -s "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm" ] && \. "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm"  # This loads nvm bash_completion
-
-export PATH="$HOME/Library/Android/sdk/cmdline-tools/latest/bin:$PATH"
-
-alias python3="/opt/homebrew/bin/python3"
-export PYTHON="/opt/homebrew/bin/python3"
-
-export CXXFLAGS="-stdlib=libc++"
-
-## [Completion]
-## Completion scripts setup. Remove the following line to uninstall
-[[ -f /Users/mahbubzulkarnain/.dart-cli-completion/zsh-config.zsh ]] && . /Users/mahbubzulkarnain/.dart-cli-completion/zsh-config.zsh || true
-## [/Completion]
-
-eval "$(fzf --zsh)"
-
 export FZF_DEFAULT_COMMAND="fd --hidden --strip-cwd-prefix --exclude .git"
 export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
 export FZF_ALT_C_COMMAND="fd --type=d --hidden --strip-cwd-prefix --exclude .git"
 
-_fzf_compgen_path() {
-  fd --hidden --exclude .git . "$1"
-}
+case "$(uname -s)" in
+    Darwin)
+        # MacOS
+        export NVM_DIR="$HOME/.nvm" 
+        [ -s "/opt/homebrew/opt/nvm/nvm.sh" ] && \. "/opt/homebrew/opt/nvm/nvm.sh" 
+        [ -s "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm" ] && \. "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm"
 
-_fzf_compgen_dir() {
-  fd --type=d --hidden --exclude .git . "$1"
-}
+        source $(brew --prefix nvm)/nvm.sh
+        source $(brew --prefix zsh-syntax-highlighting)/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+        
+        ## Android
+        export PATH="$HOME/Library/Android/sdk/cmdline-tools/latest/bin:$PATH"
+        export CXXFLAGS="-stdlib=libc++"
+
+        ## Homebrew
+        export PATH=$HOME/bin:/opt/homebrew/bin:/usr/local/bin:$GOPATH/bin:$GOROOT/bin:$PATH      
+
+        ## Python
+        alias python3="/opt/homebrew/bin/python3"
+        export PYTHON="/opt/homebrew/bin/python3"
+
+        ## Sonar
+        export SONAR_HOME=/usr/local/Cellar/sonar-scanner/6.1.0.4477/libexec
+        export SONAR=$SONAR_HOME/bin
+        export PATH=$SONAR:$PATH
+
+        ;;
+    Linux)
+        # Linux
+        export NVM_DIR="$HOME/.nvm"
+        [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+        [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+
+        if grep -qi microsoft /proc/version; then
+          alias ssh='ssh.exe'
+          alias ssh-add='ssh-add.exe'
+        fi
+        ;;
+    CYGWIN*|MINGW*|MSYS*)
+        # Windows (using Git Bash, WSL, or similar)
+        ;;
+    *)
+        export OS_TYPE="unknown"
+        ;;
+esac

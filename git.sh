@@ -1,8 +1,19 @@
 #!/usr/bin/env bash
 
 echo "Setting up Git global"
-curl -o ~/.gitignore_global https://raw.githubusercontent.com/mahbubzulkarnain/setup/master/dotfile/gitignore/.gitignore_global
-git config --global core.excludesfile ~/.gitignore_global
+if [[ "$OSTYPE" == "linux-gnu" ]]; then
+    curl -sS https://downloads.1password.com/linux/keys/1password.asc | sudo gpg --dearmor --output /usr/share/keyrings/1password-archive-keyring.gpg
+    echo 'deb [signed-by=/usr/share/keyrings/1password-archive-keyring.gpg] https://downloads.1password.com/linux/debian/amd64 stable main' | sudo tee /etc/apt/sources.list.d/1password.list
+    sudo apt update && sudo apt install 1password-cli
+
+    git config --global credential.helper 'op git-credential'
+
+    curl -o ~/.gitignore_global https://raw.githubusercontent.com/mahbubzulkarnain/setup/master/dotfile/gitignore/.gitignore_global
+    git config --global core.excludesfile ~/.gitignore_global
+fi
+
+git config --global user.name "Mahbub Zulkarnain"
+
 
 # echo "Setting up Git aliases..."
 # git config --global alias.gst git status

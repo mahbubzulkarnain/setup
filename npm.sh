@@ -1,37 +1,34 @@
 #!/usr/bin/env bash
 
 echo "Install Global node_modules"
-npm i -g node-gyp
-npm i -g nodemon
-npm i -g pm2
-npm i -g live-server
-npm i -g serverless
-npm i -g aws-sam-local
+npm i -g node-gyp nodemon pm2 live-server
+# npm i -g serverless
+# npm i -g aws-sam-local
 
 #npm i -g http-server
 #npm i -g json-server
 #npm i -g localtunnel
 
 # Database
-npm i -g sequelize-cli
+# npm i -g sequelize-cli
 
 # Debugging
 npm i -g ndb
 npm i -g node-inspector
 
 # Firebase
-npm i -g firebase-tools
+# npm i -g firebase-tools
 
 # Generator
-npm i -g @angular/cli
-npm i -g @vue/cli
-npm i -g express-generator
-npm i -g create-react-app
-npm i -g create-react-library
-npm i -g create-react-native-app
-npm i -g react-native-cli
-npm i -g exp
-npm i -g expo-cli
+# npm i -g @angular/cli
+# npm i -g @vue/cli
+# npm i -g express-generator
+# npm i -g create-react-app
+# npm i -g create-react-library
+# npm i -g create-react-native-app
+# npm i -g react-native-cli
+# npm i -g exp
+# npm i -g expo-cli
 
 # Linting
 npm i -g eslint
