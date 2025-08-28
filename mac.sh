@@ -1,5 +1,12 @@
 #!/usr/bin/env bash
 
+mkdir ~/Sandbox
+mkdir ~/Project
+mkdir ~/Tools
+mkdir ~/Learn
+mkdir ~/Example
+mkdir ~/Systems
+
 ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
 # brew doctor
 
@@ -13,7 +20,7 @@ echo "Upgrade..."
 brew upgrade
 
 echo "Install git..."
-brew install git
+bash <(curl -s https://raw.githubusercontent.com/mahbubzulkarnain/setup/master/git.sh)
 
 echo "Install java..."
 brew install jenv

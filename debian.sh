@@ -10,7 +10,13 @@ echo "Install git..."
 bash <(curl -s https://raw.githubusercontent.com/mahbubzulkarnain/setup/master/git.sh)
 
 echo "Install Java..."
-sudo apt-get install -y default-jre default-jdk
+if ! dpkg -s default-jre >/dev/null 2>&1; then
+  sudo apt-get install -y default-jre
+fi
+
+if ! dpkg -s default-jdk >/dev/null 2>&1; then
+  sudo apt-get install -y default-jdk
+fi
 
 # sudo apt-get install wget
 # sudo apt-get install vlc
@@ -23,17 +29,14 @@ sudo snap install typora-alanzanattadev
 sudo apt-get install zsh
 bash <(curl -s https://raw.githubusercontent.com/mahbubzulkarnain/setup/master/zsh.sh)
 
-echo "Install NVM..."
-curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.3/install.sh | bash
-
-echo "Install NodeJS LTS Version"
-nvm install v12.16.2
+echo "Install NPM..."
+bash <(curl -s https://raw.githubusercontent.com/mahbubzulkarnain/setup/master/npm.sh)
 
 echo "Install snap..."
-sudo apt-get install snapd
+# sudo apt-get install snapd
 
 echo "Installing Development Tools..."
-sudo snap install postman
+# sudo snap install postman
 # sudo snap install insomnia
 # sudo snap install altair
 # sudo snap install dbeaver-ce --edge

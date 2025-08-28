@@ -1,5 +1,15 @@
 #!/usr/bin/env bash
 
+if [[ "$OSTYPE" == "linux-gnu" ]]; then
+    if ! command -v nvm &>/dev/null; then
+        curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.3/install.sh | bash
+
+    fi
+    if ! command -v npm &>/dev/null; then
+        nvm install --lts
+    fi
+fi
+
 echo "Install Global node_modules"
 npm i -g node-gyp nodemon pm2 live-server
 # npm i -g serverless

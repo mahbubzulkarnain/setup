@@ -1,22 +1,15 @@
 #!/usr/bin/env bash
 
-mkdir ~/Sandbox
-mkdir ~/Project
-mkdir ~/Tools
-mkdir ~/Learn
-mkdir ~/Example
-mkdir ~/Systems
-
-sudo chown -R $(whoami) /usr/local/bin
-cd ~
-
 if [[ "$OSTYPE" == "linux-gnu" ]]; then
-    bash <(curl -s https://raw.githubusercontent.com/mahbubzulkarnain/setup/master/debian.sh)
+    if grep -qi microsoft /proc/version 2>/dev/null; then
+        bash <(curl -s https://raw.githubusercontent.com/mahbubzulkarnain/setup/master/wsl.sh)
+    else
+        bash <(curl -s https://raw.githubusercontent.com/mahbubzulkarnain/setup/master/debian.sh)
+    fi
 elif [[ "$OSTYPE" == "darwin"* ]]; then
     bash <(curl -s https://raw.githubusercontent.com/mahbubzulkarnain/setup/master/mac.sh)
 fi
 
-bash <(curl -s https://raw.githubusercontent.com/mahbubzulkarnain/setup/master/git.sh)
 
 echo "Link start!!!"
 

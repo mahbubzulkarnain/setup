@@ -1,18 +1,20 @@
 #!/usr/bin/env bash
 
-echo "Install ohmyzsh..."
-sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+if ! command -v zsh &>/dev/null; then
+    echo  "Install ohmyzsh..."
+    sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
 
-if [[ "$OSTYPE" == "linux-gnu" ]]; then
-    sudo apt-get install -y fzf zsh-syntax-highlighting zsh-autosuggestions
+    if [[ "$OSTYPE" == "linux-gnu" ]]; then
+        sudo apt-get install -y fzf zsh-syntax-highlighting zsh-autosuggestions
+    fi
+
+    cd ~ || exit
+
+    git clone https://github.com/zsh-users/zsh-autosuggestions.git ~/.oh-my-zsh/plugins/zsh-autosuggestions
+    git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ~/.oh-my-zsh/plugins/zsh-syntax-highlighting
+
+    curl -o ~/.oh-my-zsh/themes/zul.zsh-theme https://raw.githubusercontent.com/mahbubzulkarnain/setup/master/dotfile/zsh/zul.zsh-theme
+    curl -o ~/.zshrc https://raw.githubusercontent.com/mahbubzulkarnain/setup/master/dotfile/zsh/.zshrc 
 fi
 
-cd ~ || exit
-
-git clone https://github.com/zsh-users/zsh-autosuggestions.git ~/.oh-my-zsh/plugins/zsh-autosuggestions
-git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ~/.oh-my-zsh/plugins/zsh-syntax-highlighting
-
-curl -o ~/.oh-my-zsh/themes/zul.zsh-theme https://raw.githubusercontent.com/mahbubzulkarnain/setup/master/dotfile/zsh/zul.zsh-theme
-curl -o ~/.zshrc https://raw.githubusercontent.com/mahbubzulkarnain/setup/master/dotfile/zsh/.zshrc 
-
-source .zshrc
+source ~/.zshrc

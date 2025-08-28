@@ -1,11 +1,16 @@
 #!/usr/bin/env bash
 
 echo "Setting up Git global"
-if [[ "$OSTYPE" == "linux-gnu" ]]; then
-    curl -o ~/.gitignore_global https://raw.githubusercontent.com/mahbubzulkarnain/setup/master/dotfile/gitignore/.gitignore_global
-    git config --global core.excludesfile ~/.gitignore_global
+if ! command -v git &>/dev/null; then
+    if [[ "$OSTYPE" == "linux-gnu" ]]; then
+        apt install -y git
+    elif [[ "$OSTYPE" == "darwin"* ]]; then
+        brew install git
+    fi
 fi
 
+curl -o ~/.gitignore_global https://raw.githubusercontent.com/mahbubzulkarnain/setup/master/dotfile/gitignore/.gitignore_global
+git config --global core.excludesfile ~/.gitignore_global
 git config --global user.name "Mahbub Zulkarnain"
 
 
