@@ -19,7 +19,6 @@ if [ "$(git config --global user.name)" != "Mahbub Zulkarnain" ]; then
     git config --global user.name "Mahbub Zulkarnain"
 fi
 
-
 # echo "Setting up Git aliases..."
 # git config --global alias.gst git status
 # git config --global alias.st status
