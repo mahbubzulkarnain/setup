@@ -1,6 +1,5 @@
 #!/usr/bin/env bash
 
-echo "Setting up Git global"
 if ! command -v git &>/dev/null; then
     echo "Install git..."
     if [[ "$OSTYPE" == "linux-gnu" ]]; then
@@ -11,11 +10,13 @@ if ! command -v git &>/dev/null; then
 fi
 
 if [ "$(git config --global core.excludesfile)" != "$HOME/.gitignore_global" ]; then
+    echo "Setting up Git global"
     curl -o ~/.gitignore_global https://raw.githubusercontent.com/mahbubzulkarnain/setup/master/dotfile/gitignore/.gitignore_global
     git config --global core.excludesfile ~/.gitignore_global
 fi
 
 if [ "$(git config --global user.name)" != "Mahbub Zulkarnain" ]; then
+    echo "Setting up Git user.name..."
     git config --global user.name "Mahbub Zulkarnain"
 fi
 
