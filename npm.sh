@@ -6,6 +6,7 @@ if [[ "$OSTYPE" == "linux-gnu" ]]; then
 
     fi
     if ! command -v npm &>/dev/null; then
+        echo "Install NPM..."
         nvm install --lts
 
         echo "Install Global node_modules"

@@ -19,7 +19,6 @@ brew update
 echo "Upgrade..."
 brew upgrade
 
-echo "Install git..."
 bash <(curl -s https://raw.githubusercontent.com/mahbubzulkarnain/setup/master/git.sh)
 
 echo "Install java..."

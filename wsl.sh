@@ -3,13 +3,9 @@
 echo "Update..."
 sudo apt-get update
 
-echo "Install git..."
 bash <(curl -s https://raw.githubusercontent.com/mahbubzulkarnain/setup/master/git.sh)
-
-sudo apt-get install zsh
 bash <(curl -s https://raw.githubusercontent.com/mahbubzulkarnain/setup/master/zsh.sh)
 
-echo "Install NPM..."
 bash <(curl -s https://raw.githubusercontent.com/mahbubzulkarnain/setup/master/npm.sh)
 
 if [ -f /etc/os-release ]; then

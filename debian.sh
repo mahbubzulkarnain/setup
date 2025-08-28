@@ -6,7 +6,6 @@ sudo apt-get update
 echo "Upgrade..."
 sudo apt-get upgrade -y
 
-echo "Install git..."
 bash <(curl -s https://raw.githubusercontent.com/mahbubzulkarnain/setup/master/git.sh)
 
 echo "Install Java..."

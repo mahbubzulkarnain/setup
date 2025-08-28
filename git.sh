@@ -2,6 +2,7 @@
 
 echo "Setting up Git global"
 if ! command -v git &>/dev/null; then
+    echo "Install git..."
     if [[ "$OSTYPE" == "linux-gnu" ]]; then
         apt install -y git
     elif [[ "$OSTYPE" == "darwin"* ]]; then
