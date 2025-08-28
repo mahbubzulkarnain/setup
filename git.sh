@@ -10,9 +10,14 @@ if ! command -v git &>/dev/null; then
     fi
 fi
 
-curl -o ~/.gitignore_global https://raw.githubusercontent.com/mahbubzulkarnain/setup/master/dotfile/gitignore/.gitignore_global
-git config --global core.excludesfile ~/.gitignore_global
-git config --global user.name "Mahbub Zulkarnain"
+if [ "$(git config --global core.excludesfile)" != "$HOME/.gitignore_global" ]; then
+    curl -o ~/.gitignore_global https://raw.githubusercontent.com/mahbubzulkarnain/setup/master/dotfile/gitignore/.gitignore_global
+    git config --global core.excludesfile ~/.gitignore_global
+fi
+
+if [ "$(git config --global user.name)" != "Mahbub Zulkarnain" ]; then
+    git config --global user.name "Mahbub Zulkarnain"
+fi
 
 
 # echo "Setting up Git aliases..."
