@@ -10,7 +10,6 @@ elif [[ "$OSTYPE" == "darwin"* ]]; then
     bash <(curl -s https://raw.githubusercontent.com/mahbubzulkarnain/setup/master/mac.sh)
 fi
 
-
 echo "Link start!!!"
 
 #elif [[ "$OSTYPE" == "cygwin" ]]; then
