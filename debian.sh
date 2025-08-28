@@ -16,16 +16,13 @@ bash <(curl -s https://raw.githubusercontent.com/mahbubzulkarnain/setup/master/g
 echo "Install markdown ide..."
 sudo snap install typora-alanzanattadev
 
-sudo apt-get install zsh
 bash <(curl -s https://raw.githubusercontent.com/mahbubzulkarnain/setup/master/zsh.sh)
-
-echo "Install NPM..."
 bash <(curl -s https://raw.githubusercontent.com/mahbubzulkarnain/setup/master/npm.sh)
 
-echo "Install snap..."
+# echo "Install snap..."
 # sudo apt-get install snapd
 
-echo "Installing Development Tools..."
+# echo "Installing Development Tools..."
 # sudo snap install postman
 # sudo snap install insomnia
 # sudo snap install altair
