@@ -18,14 +18,19 @@ if [ -f /etc/os-release ]; then
         echo "Ini Debian"
     ;;
     kali)
-        sudo apt install -y kali-linux-large kali-win-kex
-        if ! command -v sniper >/dev/null 2>&1; then
-            echo "Install Sn1per..."
-            cd ~/Sandbox
-            git clone https://github.com/1N3/Sn1per
-            cd Sn1per
-            bash install.sh
-        fi
+      if ! dpkg -s kali-linux-large >/dev/null 2>&1; then
+        sudo apt install -y kali-linux-large
+      fi
+      if ! dpkg -s kali-win-kex >/dev/null 2>&1; then
+        sudo apt install -y kali-win-kex
+      fi
+      if ! command -v sniper >/dev/null 2>&1; then
+        echo "Install Sn1per..."
+        cd ~/Sandbox
+        git clone https://github.com/1N3/Sn1per
+        cd Sn1per
+        bash install.sh
+      fi
     ;;
     arch)
       echo "Ini Arch Linux"
