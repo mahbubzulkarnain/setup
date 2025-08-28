@@ -5,8 +5,8 @@ sudo apt-get update
 
 bash <(curl -s https://raw.githubusercontent.com/mahbubzulkarnain/setup/master/git.sh)
 bash <(curl -s https://raw.githubusercontent.com/mahbubzulkarnain/setup/master/zsh.sh)
-
 bash <(curl -s https://raw.githubusercontent.com/mahbubzulkarnain/setup/master/npm.sh)
+bash <(curl -s https://raw.githubusercontent.com/mahbubzulkarnain/setup/master/java.sh)
 
 if [ -f /etc/os-release ]; then
   . /etc/os-release

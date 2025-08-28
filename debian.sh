@@ -8,15 +8,6 @@ sudo apt-get upgrade -y
 
 bash <(curl -s https://raw.githubusercontent.com/mahbubzulkarnain/setup/master/git.sh)
 
-echo "Install Java..."
-if ! dpkg -s default-jre >/dev/null 2>&1; then
-  sudo apt-get install -y default-jre
-fi
-
-if ! dpkg -s default-jdk >/dev/null 2>&1; then
-  sudo apt-get install -y default-jdk
-fi
-
 # sudo apt-get install wget
 # sudo apt-get install vlc
 # sudo apt-get install gimp
