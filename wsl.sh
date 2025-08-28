@@ -1,3 +1,5 @@
+#!/usr/bin/env bash
+
 echo "Update..."
 sudo apt-get update
 
