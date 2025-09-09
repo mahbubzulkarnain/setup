@@ -4,10 +4,12 @@ if ! command -v zsh &>/dev/null; then
     echo  "Install ohmyzsh..."
     sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
 
-    if [[ "$OSTYPE" == "linux-gnu" ]]; then
-        sudo apt-get install -y fzf zsh-syntax-highlighting zsh-autosuggestions
+    if ! command -v brew &>/dev/null; then
+        bash <(curl -s https://raw.githubusercontent.com/mahbubzulkarnain/setup/master/brew.sh)
     fi
 
+    brew install fzf zsh-syntax-highlighting zsh-autosuggestions
+    
     cd ~ || exit
 
     git clone https://github.com/zsh-users/zsh-autosuggestions.git ~/.oh-my-zsh/plugins/zsh-autosuggestions

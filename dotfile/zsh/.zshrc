@@ -126,7 +126,6 @@ alias dcrestart='docker-compose restart'
 # Alias for Docker compose show log <service_name>
 alias dclog='docker-compose logs -f'
 
-
 # Alias for nodemon run "go run main.go"
 alias gorun='nodemon --exec go run main.go --signal SIGTERM'
 
@@ -137,7 +136,7 @@ alias gotc='go test -cover'
 alias got='go test ./... -v'
 
 # Alias for run golangci-lint
-alias goclint="golangci-lint run --exclude=\"exported \\w+ (\\S*['.]*)([a-zA-Z'.*]*) should have comment or be unexported\" --exclude-use-default=false --enable=revive	--enable=gocyclo --enable=goconst --enable=unconvert ./..."
+alias goclint="golangci-lint run --fix --enable=revive --enable=gocyclo --enable=goconst --enable=unconvert ./..."
 
 # Alias for run staticcheck
 # https://www.phillipsj.net/posts/enabling-staticcheck-in-goland/, Enabling Staticcheck in GoLand
@@ -172,6 +171,9 @@ alias rce='EDITOR=nano rails credentials:edit'
 
 # Alias for flutter
 alias flutter='fvm flutter'
+
+# Alias for dart
+alias dart='fvm dart'
 
 # TERM Color
 export TERM="xterm-256color"
@@ -341,9 +343,28 @@ case "$(uname -s)" in
         [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
         [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
 
+        eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+
+        # FVM
+        export PATH="/home/mahbubzulkarnain/.fvm_flutter/bin:$PATH"
+
+        alias flutter="fvm flutter"
+        alias dart="fvm dart"
+        alias pub="fvm pub"
+
         if grep -qi microsoft /proc/version; then
+          alias gui='kex --win -s'
           alias ssh='ssh.exe'
           alias ssh-add='ssh-add.exe'
+          alias golangci-lint="/home/mahbubzulkarnain/go/bin/golangci-lint"
+
+          # Browser
+          export BROWSER="/mnt/c/Windows/System32/cmd.exe /c start"
+          export CHROME_EXECUTABLE="/mnt/c/Program Files/Google/Chrome/Application/chrome.exe"
+      
+          #THIS MUST BE AT THE END OF THE FILE FOR SDKMAN TO WORK!!!
+          export SDKMAN_DIR="$HOME/.sdkman"
+          [[ -s "$HOME/.sdkman/bin/sdkman-init.sh" ]] && source "$HOME/.sdkman/bin/sdkman-init.sh"
         fi
         ;;
     CYGWIN*|MINGW*|MSYS*)

@@ -1,40 +1,32 @@
 #!/usr/bin/env bash
 
-mkdir ~/Sandbox
-mkdir ~/Project
-mkdir ~/Tools
-mkdir ~/Learn
 mkdir ~/Example
+mkdir ~/Learn
+mkdir ~/Project
+mkdir ~/Sandbox
 mkdir ~/Systems
+mkdir ~/Tools
 
-ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
-# brew doctor
+bash <(curl -s https://raw.githubusercontent.com/mahbubzulkarnain/setup/master/brew.sh)
+jenv add "$(/usr/libexec/java_home)"
 
 # Install Xcode command line tools
 xcode-select --install
 
-echo "Update..."
-brew update
-
-echo "Upgrade..."
-brew upgrade
-
 bash <(curl -s https://raw.githubusercontent.com/mahbubzulkarnain/setup/master/git.sh)
 
-echo "Install java..."
-brew install jenv
-brew install --cask java
+# brew install --cask java
 # brew install maven
 # brew install gradle
 
-brew install wget
+# brew install wget
 # brew cask install vlc
 # brew cask install gimp
 # brew install coreutils
 # brew cask install qbittorrent
 
-echo "Install markdown ide..."
-brew cask install macdown
+# echo "Install markdown ide..."
+# brew cask install macdown
 
 # echo "Install flutter..."
 # cd ~/Systems/
@@ -43,15 +35,11 @@ brew cask install macdown
 
 echo "Install iterm..."
 # brew cask install iterm2
-brew install zsh zsh-completions
-bash <(curl -s https://raw.githubusercontent.com/mahbubzulkarnain/setup/master/zsh.sh)
-jenv add "$(/usr/libexec/java_home)"
 
-echo "Install NVM..."
-brew install nvm
+bash <(curl -s https://raw.githubusercontent.com/mahbubzulkarnain/setup/master/zsh.sh)
 
 echo "Install NodeJS LTS Version"
-nvm install v12.16.2
+nvm install --lts
 bash <(curl -s https://raw.githubusercontent.com/mahbubzulkarnain/setup/master/npm.sh)
 
 echo "Install go..."
