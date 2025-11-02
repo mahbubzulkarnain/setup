@@ -9,3 +9,7 @@ node_modules
 dump.rdb
 
 __debug_bin*
+
+.plaesy
+.claude
+CLAUDE.md
