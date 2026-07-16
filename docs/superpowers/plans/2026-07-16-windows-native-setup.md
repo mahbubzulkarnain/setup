@@ -458,7 +458,7 @@ git commit -m "Add windows.ps1: PowerShell bootstrap for Windows-native setup"
 ### Task 6: Document Windows in `README.md`
 
 **Files:**
-- Modify: `README.md:37-38` (insert a new section between GEM and GO Module, matching alphabetical-ish existing order — actually matches existing insertion point right after the top-level one-liner block, mirroring where `Debian`/`Mac` sit)
+- Modify: `README.md:37-38` (insert a new section right after the existing Mac section and before the NPM section, mirroring where `Debian`/`Mac` sit)
 
 **Interfaces:**
 - Consumes: nothing.
