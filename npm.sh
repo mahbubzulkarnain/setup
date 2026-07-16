@@ -11,6 +11,9 @@ if [[ "$OSTYPE" == "linux-gnu" ]]; then
 
         echo "Install Global node_modules"
         npm i -g node-gyp nodemon pm2 live-server
+
+        # AI tools
+        npm i -g @anthropic-ai/claude-code
         # npm i -g serverless
         # npm i -g aws-sam-local
 
