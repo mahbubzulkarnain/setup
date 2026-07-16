@@ -14,7 +14,12 @@ if ! command -v zsh &>/dev/null; then
     sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
 
     if [[ -n "$MSYSTEM" ]]; then
-        pacman -S --noconfirm fzf
+        pacman -S --noconfirm unzip
+        fzf_version=$(curl -fsSL https://api.github.com/repos/junegunn/fzf/releases/latest | grep '"tag_name"' | sed -E 's/.*"v([^"]+)".*/\1/')
+        curl -fsSL -o /tmp/fzf.zip "https://github.com/junegunn/fzf/releases/download/v${fzf_version}/fzf-${fzf_version}-windows_amd64.zip"
+        unzip -o /tmp/fzf.zip -d /tmp
+        install -m 755 /tmp/fzf.exe /usr/bin/fzf
+        rm -f /tmp/fzf.zip /tmp/fzf.exe
     else
         if ! command -v brew &>/dev/null; then
             bash <(curl -s https://raw.githubusercontent.com/mahbubzulkarnain/setup/master/brew.sh)
