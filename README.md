@@ -16,6 +16,11 @@ bash <(curl -s https://raw.githubusercontent.com/mahbubzulkarnain/setup/master/d
 bash <(curl -s https://raw.githubusercontent.com/mahbubzulkarnain/setup/master/mac.sh)
 ```
 
+###### Windows
+```
+irm https://raw.githubusercontent.com/mahbubzulkarnain/setup/master/windows.ps1 | iex
+```
+
 ###### NPM
 ```
 bash <(curl -s https://raw.githubusercontent.com/mahbubzulkarnain/setup/master/npm.sh)
