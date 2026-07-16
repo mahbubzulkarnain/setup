@@ -7,7 +7,7 @@ if ! command -v git &>/dev/null; then
     elif [[ "$OSTYPE" == "darwin"* ]]; then
         brew install git
     elif [[ -n "$MSYSTEM" ]]; then
-        pacman -S --noconfirm git
+        pacman -Sy --noconfirm git
     fi
 fi
 
