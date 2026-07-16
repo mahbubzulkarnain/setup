@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+install_npm_packages=0
+
 if [[ -n "$MSYSTEM" ]]; then
     if [[ ! -x /opt/nodejs/node.exe ]]; then
         echo "Install Node.js..."
@@ -10,6 +12,7 @@ if [[ -n "$MSYSTEM" ]]; then
         rm -rf /opt/nodejs
         mv "/opt/node-${node_version}-win-x64" /opt/nodejs
         rm -f /tmp/node.zip
+        install_npm_packages=1
     fi
     export PATH="/opt/nodejs:$PATH"
 elif [[ "$OSTYPE" == "linux-gnu" ]]; then
@@ -17,9 +20,12 @@ elif [[ "$OSTYPE" == "linux-gnu" ]]; then
         curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.3/install.sh | bash
 
     fi
+    if ! command -v npm &>/dev/null; then
+        install_npm_packages=1
+    fi
 fi
 
-if ! command -v npm &>/dev/null; then
+if [[ "$install_npm_packages" == "1" ]]; then
     echo "Install NPM..."
     [[ "$OSTYPE" == "linux-gnu" ]] && nvm install --lts
 
