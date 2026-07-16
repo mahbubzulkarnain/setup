@@ -369,6 +369,7 @@ case "$(uname -s)" in
         ;;
     CYGWIN*|MINGW*|MSYS*)
         # Windows (using Git Bash, WSL, or similar)
+        [[ -d /opt/nodejs ]] && export PATH="/opt/nodejs:$PATH"
         ;;
     *)
         export OS_TYPE="unknown"
