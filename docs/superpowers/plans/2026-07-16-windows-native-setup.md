@@ -147,7 +147,12 @@ if ! command -v zsh &>/dev/null; then
     sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
 
     if [[ -n "$MSYSTEM" ]]; then
-        pacman -S --noconfirm fzf
+        pacman -S --noconfirm unzip
+        fzf_version=$(curl -fsSL https://api.github.com/repos/junegunn/fzf/releases/latest | grep '"tag_name"' | sed -E 's/.*"v([^"]+)".*/\1/')
+        curl -fsSL -o /tmp/fzf.zip "https://github.com/junegunn/fzf/releases/download/v${fzf_version}/fzf-${fzf_version}-windows_amd64.zip"
+        unzip -o /tmp/fzf.zip -d /tmp
+        install -m 755 /tmp/fzf.exe /usr/bin/fzf
+        rm -f /tmp/fzf.zip /tmp/fzf.exe
     else
         if ! command -v brew &>/dev/null; then
             bash <(curl -s https://raw.githubusercontent.com/mahbubzulkarnain/setup/master/brew.sh)
@@ -168,6 +173,19 @@ fi
 source ~/.zshrc
 ```
 
+> **Revised after Task 2's first implementation pass:** the brief originally
+> specified `pacman -S --noconfirm fzf` for the MSYS2 branch. The implementer
+> found this fails unconditionally on a plain MSYS2 session (`MSYSTEM=MSYS`)
+> — no plain `fzf` package exists in the base `msys` pacman repo, only
+> `mingw-w64-*-fzf` variants whose binaries aren't on `PATH` for a plain MSYS
+> session (confirmed by reading `C:\msys64\etc\profile`). Root-caused and
+> fixed by fetching the official Windows release binary via `curl`
+> (using the GitHub API to resolve the latest tag rather than a hardcoded
+> version), matching the `curl -o` pattern already used elsewhere in this
+> file for the theme and `.zshrc`. This block above reflects the corrected
+> version; the fix was applied as a follow-up commit to Task 2, not a plan
+> rewrite from scratch.
+
 - [ ] **Step 2: Simulate a fresh machine by removing the manually-installed zsh package**
 
 The target machine already has `zsh` installed manually (from earlier in this session), which would make `command -v zsh` succeed and skip the whole block under test — remove it first so the test actually exercises the fix, exactly like a real fresh-Windows user would hit it.
@@ -178,7 +196,7 @@ Expected: pacman removes the `zsh` package, then empty output followed by `exit:
 - [ ] **Step 3: Run the fixed script locally inside MSYS2 bash**
 
 Run: `& "C:\msys64\usr\bin\bash.exe" -lc 'bash "/c/Users/CODE.ID/Projects/github.com/mahbubzulkarnain/setup/zsh.sh"'`
-Expected output, in order: `Install zsh...` → pacman installing `zsh` → `Install ohmyzsh...` → oh-my-zsh installer output ending in its success banner (NOT the "Zsh is not installed" abort message) → pacman installing `fzf` → two `git clone` lines for the zsh plugins → no errors from the two `curl -o` lines.
+Expected output, in order: `Install zsh...` → pacman installing `zsh` → `Install ohmyzsh...` → oh-my-zsh installer output ending in its success banner (NOT the "Zsh is not installed" abort message) → pacman installing `unzip` → curl fetching the latest fzf release zip → `fzf` installed to `/usr/bin/fzf` → two `git clone` lines for the zsh plugins → no errors from the two `curl -o` lines.
 
 - [ ] **Step 4: Confirm the full setup landed correctly**
 

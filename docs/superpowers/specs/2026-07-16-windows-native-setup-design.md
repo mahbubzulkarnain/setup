@@ -57,7 +57,7 @@ No sudo (MSYS2 `pacman` doesn't need it). Rest of the file (gitignore_global, us
        pacman -S --noconfirm zsh
    fi
    ```
-2. Guard the Homebrew-dependent block (`fzf`, `zsh-syntax-highlighting`, `zsh-autosuggestions` via brew) so MSYS2 uses `pacman -S --noconfirm fzf` instead — Homebrew does not run on Windows and its installer aborts on non-Linux/Darwin `uname`. The two zsh plugins are already fetched via direct `git clone` further down regardless of brew, so no change needed there.
+2. Guard the Homebrew-dependent block (`fzf`, `zsh-syntax-highlighting`, `zsh-autosuggestions` via brew) so MSYS2 fetches `fzf` a different way instead — Homebrew does not run on Windows and its installer aborts on non-Linux/Darwin `uname`. No plain `fzf` pacman package exists on MSYS2 either (only `mingw-w64-*-fzf`, not on `PATH` for a plain MSYS session), so MSYS2 downloads the official Windows release binary via `curl` (latest tag resolved through the GitHub API), matching the `curl -o` pattern already used elsewhere in `zsh.sh` for the theme/`.zshrc`. The two zsh plugins are already fetched via direct `git clone` further down regardless of brew, so no change needed there.
 3. Everything else (oh-my-zsh install invocation, theme curl, `.zshrc` curl, final `source ~/.zshrc`) is unchanged.
 
 ### `windows.sh` (new)
