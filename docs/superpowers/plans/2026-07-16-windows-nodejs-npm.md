@@ -124,6 +124,8 @@ New (full file):
 ```bash
 #!/usr/bin/env bash
 
+install_npm_packages=0
+
 if [[ -n "$MSYSTEM" ]]; then
     if [[ ! -x /opt/nodejs/node.exe ]]; then
         echo "Install Node.js..."
@@ -134,6 +136,7 @@ if [[ -n "$MSYSTEM" ]]; then
         rm -rf /opt/nodejs
         mv "/opt/node-${node_version}-win-x64" /opt/nodejs
         rm -f /tmp/node.zip
+        install_npm_packages=1
     fi
     export PATH="/opt/nodejs:$PATH"
 elif [[ "$OSTYPE" == "linux-gnu" ]]; then
@@ -141,9 +144,12 @@ elif [[ "$OSTYPE" == "linux-gnu" ]]; then
         curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.3/install.sh | bash
 
     fi
+    if ! command -v npm &>/dev/null; then
+        install_npm_packages=1
+    fi
 fi
 
-if ! command -v npm &>/dev/null; then
+if [[ "$install_npm_packages" == "1" ]]; then
     echo "Install NPM..."
     [[ "$OSTYPE" == "linux-gnu" ]] && nvm install --lts
 
@@ -222,26 +228,51 @@ if ! command -v npm &>/dev/null; then
 fi
 ```
 
+> **Revised after Task 1's first implementation pass.** The original version
+> of this block gated the global-package-install list on `if ! command -v
+> npm`, shared between platforms. On MSYS2 this is broken: `npm` ships
+> bundled inside the same Node.js Windows zip as `node.exe`, so
+> `command -v npm` succeeds immediately after the unconditional
+> `export PATH="/opt/nodejs:$PATH"` line — on every run, first-time or not —
+> making the install-list block unreachable on MSYS2 in every case (confirmed
+> by direct implementation and testing, not theoretical). Fixed by
+> introducing an explicit `install_npm_packages` flag, set to `1` only when
+> Node was *just* freshly downloaded (MSYS2) or when `npm` was genuinely
+> absent before the nvm bootstrap (Linux, preserving the original behavior
+> exactly) — decoupling "should I install the package list" from "is npm on
+> PATH right now" for the MSYS2 case specifically. The block above reflects
+> the corrected version.
+
 - [ ] **Step 2: Note the target machine's real starting state before testing**
 
-This machine already has `/opt/nodejs` populated (Node LTS extracted, `@anthropic-ai/claude-code` already globally installed) from hands-on verification done during the design phase — this is real, intentional state, not test pollution. Confirm it's there: `& "C:\msys64\usr\bin\bash.exe" -lc 'test -x /opt/nodejs/node.exe && echo "node present"; test -d /opt/nodejs/node_modules/@anthropic-ai && echo "claude-code present"'`
-Expected: both lines print.
+This machine already has `/opt/nodejs` populated (Node LTS extracted, `@anthropic-ai/claude-code` already globally installed) from hands-on verification done during the design phase — this is real, intentional state, not test pollution, but it means `install_npm_packages` will correctly stay `0` on a plain re-run here (Node already present, nothing to freshly install) — which is *correct* behavior, not a bug, but doesn't exercise the install-list path. Confirm current state: `& "C:\msys64\usr\bin\bash.exe" -lc 'test -x /opt/nodejs/node.exe && echo "node present"; command -v eslint || echo "eslint not yet installed"'`
+Expected: `node present` and `eslint not yet installed` (only `claude`/`node`/`npm`/`npx` exist on this machine so far — the package list has never actually run yet, per Task 1's first-pass finding).
 
-- [ ] **Step 3: Run the rewritten script locally inside MSYS2 bash**
+- [ ] **Step 3: Simulate a genuinely fresh machine to actually exercise the install-list path**
+
+Remove the existing `/opt/nodejs` so the script's fresh-install branch (and therefore `install_npm_packages=1`) actually triggers, exactly like a real first-time Windows setup would hit it: `& "C:\msys64\usr\bin\bash.exe" -lc 'rm -rf /opt/nodejs; test -x /opt/nodejs/node.exe && echo "still present" || echo "removed"'`
+Expected: `removed`.
+
+- [ ] **Step 4: Run the corrected script locally inside MSYS2 bash**
 
 Run: `& "C:\msys64\usr\bin\bash.exe" -lc 'bash "/c/Users/CODE.ID/Projects/github.com/mahbubzulkarnain/setup/npm.sh"'`
-Expected: since `/opt/nodejs/node.exe` already exists, the download block is skipped (no `Install Node.js...` line) — only the unconditional `export PATH=...` runs. Then, since `command -v npm` now succeeds, the shared install block DOES run (this is the script's first real end-to-end pass with the actual file, even though `/opt/nodejs` itself was pre-populated by hand) — expect `Install NPM...`, `Install Global node_modules`, a sequence of `npm i -g ...` lines (each fast — packages already present just report up-to-date), ending with `Check list global node_modules...` and an `npm list -g --depth 0` dump that includes `@anthropic-ai/claude-code`.
+Expected, in order: `Install Node.js...` → the version-resolve/download/extract sequence → `Install NPM...` → `Install Global node_modules` → a sequence of `npm i -g ...` lines actually installing packages this time (not just reporting "up to date") → `Check list global node_modules...` and an `npm list -g --depth 0` dump that includes `@anthropic-ai/claude-code`, `eslint`, `jest`, `yarn`, and the rest of the active (non-commented) list.
 
-- [ ] **Step 4: Confirm `claude` and the rest of the list are reachable**
+- [ ] **Step 5: Confirm `claude` and the rest of the list are reachable**
 
 Run: `& "C:\msys64\usr\bin\bash.exe" -lc 'export PATH="/opt/nodejs:$PATH"; command -v claude; claude --version; command -v eslint; command -v jest; command -v yarn'`
 Expected: `claude` resolves to `/opt/nodejs/claude`, `claude --version` prints a real version string (e.g. `2.1.211 (Claude Code)`), and `eslint`/`jest`/`yarn` all resolve under `/opt/nodejs`.
 
-- [ ] **Step 5: Syntax-check**
+- [ ] **Step 6: Re-run to confirm idempotency**
+
+Run: `& "C:\msys64\usr\bin\bash.exe" -lc 'bash "/c/Users/CODE.ID/Projects/github.com/mahbubzulkarnain/setup/npm.sh"'`
+Expected: no `Install Node.js...`/`Install NPM...` block runs this time (`/opt/nodejs/node.exe` now exists, so `install_npm_packages` stays `0`) — no output other than the (harmless, unconditional) `export PATH=...` having no visible effect.
+
+- [ ] **Step 7: Syntax-check**
 
 Run: `& "C:\msys64\usr\bin\bash.exe" -lc 'bash -n "/c/Users/CODE.ID/Projects/github.com/mahbubzulkarnain/setup/npm.sh" && echo "syntax ok"'`
 
-- [ ] **Step 6: Commit**
+- [ ] **Step 8: Commit**
 
 ```bash
 cd "/c/Users/CODE.ID/Projects/github.com/mahbubzulkarnain/setup"
