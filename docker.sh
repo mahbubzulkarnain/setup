@@ -1,3 +1,6 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
 detect_platform() {
 	OS_TYPE="unknown"
 	if [[ "$(uname -s)" == "Darwin" ]]; then

@@ -1,8 +1,9 @@
 #!/usr/bin/env bash
+set -euo pipefail
 
-install_npm_packages=0
+NVM_DIR="${NVM_DIR:-$HOME/.nvm}"
 
-if [[ -n "$MSYSTEM" ]]; then
+if [[ -n "${MSYSTEM:-}" ]]; then
     if [[ ! -x /opt/nodejs/node.exe ]]; then
         echo "Install Node.js..."
         node_version=$(curl -fsSL https://nodejs.org/dist/index.json | grep -o '"version":"[^"]*"[^}]*"lts":"[^"]*"' | head -1 | grep -o '"version":"[^"]*"' | cut -d'"' -f4)
@@ -12,24 +13,22 @@ if [[ -n "$MSYSTEM" ]]; then
         rm -rf /opt/nodejs
         mv "/opt/node-${node_version}-win-x64" /opt/nodejs
         rm -f /tmp/node.zip
-        install_npm_packages=1
     fi
     export PATH="/opt/nodejs:$PATH"
-elif [[ "$OSTYPE" == "linux-gnu" ]]; then
+elif [[ "$OSTYPE" == "linux-gnu"* ]]; then
     if ! [ -s "$NVM_DIR/nvm.sh" ]; then
         curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.3/install.sh | bash
-
     fi
+    # shellcheck disable=SC1091
+    [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
     if ! command -v npm &>/dev/null; then
-        install_npm_packages=1
+        echo "Install NPM..."
+        nvm install --lts
     fi
 fi
 
-if [[ "$install_npm_packages" == "1" ]]; then
-    echo "Install NPM..."
-    [[ "$OSTYPE" == "linux-gnu" ]] && nvm install --lts
-
-    echo "Install Global node_modules"
+if command -v npm &>/dev/null; then
+    echo "Sync global node_modules..."
     npm i -g node-gyp nodemon pm2 live-server
 
     # AI tools

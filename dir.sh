@@ -1,6 +1,4 @@
-mkdir ~/Example
-mkdir ~/Learn
-mkdir ~/Project
-mkdir ~/Sandbox
-mkdir ~/Systems
-mkdir ~/Tools
+#!/usr/bin/env bash
+set -euo pipefail
+
+mkdir -p ~/Example ~/Learn ~/Project ~/Sandbox ~/Systems ~/Tools

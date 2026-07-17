@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+set -euo pipefail
 
 echo "Install Global Go Module"
 go get -U golang.org/x/tools/cmd/godoc

@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+set -euo pipefail
 
 install_formula() {
     if brew list "$1" &>/dev/null; then

@@ -127,5 +127,5 @@ if ($null -eq $vscodeSettings) {
     Write-Host "VS Code default terminal set to $msys2ZshProfileName."
 }
 
-Write-Host "Running windows.sh inside MSYS2 bash..."
-& $msys2Bash -lc "bash <(curl -s https://raw.githubusercontent.com/mahbubzulkarnain/setup/master/windows.sh)"
+Write-Host "Handing off to install.sh inside MSYS2 bash..."
+& $msys2Bash -lc "bash <(curl -s https://raw.githubusercontent.com/mahbubzulkarnain/setup/master/install.sh)"

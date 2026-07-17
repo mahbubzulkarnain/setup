@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+set -euo pipefail
 
 if ! command -v zsh &>/dev/null; then
     echo "Install zsh..."
@@ -6,14 +7,14 @@ if ! command -v zsh &>/dev/null; then
         apt install -y zsh
     elif [[ "$OSTYPE" == "darwin"* ]]; then
         brew install zsh
-    elif [[ -n "$MSYSTEM" ]]; then
+    elif [[ -n "${MSYSTEM:-}" ]]; then
         pacman -Sy --noconfirm zsh
     fi
 
     echo "Install ohmyzsh..."
     sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
 
-    if [[ -n "$MSYSTEM" ]]; then
+    if [[ -n "${MSYSTEM:-}" ]]; then
         pacman -Sy --noconfirm unzip
         fzf_version=$(curl -fsSL https://api.github.com/repos/junegunn/fzf/releases/latest | grep '"tag_name"' | sed -E 's/.*"v([^"]+)".*/\1/')
         curl -fsSL -o /tmp/fzf.zip "https://github.com/junegunn/fzf/releases/download/v${fzf_version}/fzf-${fzf_version}-windows_amd64.zip"

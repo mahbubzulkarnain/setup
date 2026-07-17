@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+set -euo pipefail
 
 if command -v brew &>/dev/null; then
     echo "Homebrew already installed, skipping."

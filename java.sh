@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+set -euo pipefail
 
 if [ -d "$HOME/.sdkman" ]; then
     if ! command -v sdk >/dev/null 2>&1; then

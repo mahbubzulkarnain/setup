@@ -2,53 +2,62 @@
 
 > Setup for new computer/laptop
 
-```
+```bash
 bash <(curl -s https://raw.githubusercontent.com/mahbubzulkarnain/setup/master/install.sh)
- ```
-
-###### Debian
-```
-bash <(curl -s https://raw.githubusercontent.com/mahbubzulkarnain/setup/master/debian.sh)
-```
-
-###### Mac
-```
-bash <(curl -s https://raw.githubusercontent.com/mahbubzulkarnain/setup/master/mac.sh)
 ```
 
 ###### Windows
-```
+
+```powershell
 irm https://raw.githubusercontent.com/mahbubzulkarnain/setup/master/windows.ps1 | iex
 ```
 
-###### NPM
+###### Linux
+
+```bash
+bash <(curl -s https://raw.githubusercontent.com/mahbubzulkarnain/setup/master/linux.sh)
 ```
+
+###### Mac
+
+```bash
+bash <(curl -s https://raw.githubusercontent.com/mahbubzulkarnain/setup/master/mac.sh)
+```
+
+###### NPM
+
+```bash
 bash <(curl -s https://raw.githubusercontent.com/mahbubzulkarnain/setup/master/npm.sh)
 ```
 
 ###### AI
-```
+
+```bash
 bash <(curl -s https://raw.githubusercontent.com/mahbubzulkarnain/setup/master/ai.sh)
 ```
 
 ###### GEM
-```
+
+```bash
 bash <(curl -s https://raw.githubusercontent.com/mahbubzulkarnain/setup/master/gem.sh)
 ```
 
 ###### GO Module
-```
+
+```bash
 bash <(curl -s https://raw.githubusercontent.com/mahbubzulkarnain/setup/master/gomod.sh)
 ```
 
 ###### VIM
-```
+
+```bash
 bash <(curl -s https://raw.githubusercontent.com/mahbubzulkarnain/setup/master/vim.sh)
 ```
 
 ###### ZSH
-```
+
+```bash
 bash <(curl -s https://raw.githubusercontent.com/mahbubzulkarnain/setup/master/zsh.sh)
 ```
 
-[More ...](https://github.com/mahbubzulkarnain?tab=repositories&q=setup)
+[More setup...](https://github.com/mahbubzulkarnain?tab=repositories&q=setup)
