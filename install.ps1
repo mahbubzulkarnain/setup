@@ -74,52 +74,107 @@ if ($hasVCTools) {
     winget install --id Microsoft.VisualStudio.2022.BuildTools -e --accept-package-agreements --accept-source-agreements --override "--wait --quiet --add Microsoft.VisualStudio.Workload.VCTools --includeRecommended"
 }
 
-function ConvertFrom-JsonC {
+function ConvertTo-StrictJson {
+    # Strips // and /* */ comments plus trailing commas (string-aware) so
+    # VS Code / Windows Terminal settings.json (JSONC) can be fed to the
+    # built-in ConvertFrom-Json. Pure string processing on purpose - no
+    # System.Text.Json, which isn't available under Windows PowerShell 5.1.
     param([Parameter(Mandatory)][string]$Json)
 
-    function Convert-JsonElement($element) {
-        switch ($element.ValueKind) {
-            'Object' {
-                $obj = [ordered]@{}
-                foreach ($prop in $element.EnumerateObject()) {
-                    $obj[$prop.Name] = Convert-JsonElement $prop.Value
-                }
-                return [PSCustomObject]$obj
+    $noComments = New-Object System.Text.StringBuilder
+    $inString = $false
+    $escapeNext = $false
+    $i = 0
+    $len = $Json.Length
+    while ($i -lt $len) {
+        $ch = $Json[$i]
+
+        if ($inString) {
+            [void]$noComments.Append($ch)
+            if ($escapeNext) {
+                $escapeNext = $false
+            } elseif ($ch -eq '\') {
+                $escapeNext = $true
+            } elseif ($ch -eq '"') {
+                $inString = $false
             }
-            'Array' {
-                $arr = @()
-                foreach ($item in $element.EnumerateArray()) {
-                    $arr += , (Convert-JsonElement $item)
-                }
-                return , $arr
-            }
-            'String' { return $element.GetString() }
-            'Number' {
-                $asLong = 0L
-                if ($element.TryGetInt64([ref]$asLong)) { return $asLong }
-                return $element.GetDouble()
-            }
-            'True' { return $true }
-            'False' { return $false }
-            default { return $null }
+            $i++
+            continue
         }
+
+        if ($ch -eq '"') {
+            $inString = $true
+            [void]$noComments.Append($ch)
+            $i++
+            continue
+        }
+
+        if ($ch -eq '/' -and ($i + 1) -lt $len -and $Json[$i + 1] -eq '/') {
+            while ($i -lt $len -and $Json[$i] -ne "`n") { $i++ }
+            continue
+        }
+
+        if ($ch -eq '/' -and ($i + 1) -lt $len -and $Json[$i + 1] -eq '*') {
+            $i += 2
+            while ($i + 1 -lt $len -and -not ($Json[$i] -eq '*' -and $Json[$i + 1] -eq '/')) { $i++ }
+            $i += 2
+            continue
+        }
+
+        [void]$noComments.Append($ch)
+        $i++
     }
 
-    $options = New-Object System.Text.Json.JsonDocumentOptions
-    $options.CommentHandling = [System.Text.Json.JsonCommentHandling]::Skip
-    $options.AllowTrailingCommas = $true
+    $noCommentsStr = $noComments.ToString()
+    $result = New-Object System.Text.StringBuilder
+    $inString = $false
+    $escapeNext = $false
+    $i = 0
+    $len = $noCommentsStr.Length
+    while ($i -lt $len) {
+        $ch = $noCommentsStr[$i]
 
-    $doc = [System.Text.Json.JsonDocument]::Parse($Json, $options)
-    try {
-        return Convert-JsonElement $doc.RootElement
-    } finally {
-        $doc.Dispose()
+        if ($inString) {
+            [void]$result.Append($ch)
+            if ($escapeNext) {
+                $escapeNext = $false
+            } elseif ($ch -eq '\') {
+                $escapeNext = $true
+            } elseif ($ch -eq '"') {
+                $inString = $false
+            }
+            $i++
+            continue
+        }
+
+        if ($ch -eq '"') {
+            $inString = $true
+            [void]$result.Append($ch)
+            $i++
+            continue
+        }
+
+        if ($ch -eq ',') {
+            $j = $i + 1
+            while ($j -lt $len -and ($noCommentsStr[$j] -eq ' ' -or $noCommentsStr[$j] -eq "`t" -or $noCommentsStr[$j] -eq "`r" -or $noCommentsStr[$j] -eq "`n")) {
+                $j++
+            }
+            if ($j -lt $len -and ($noCommentsStr[$j] -eq '}' -or $noCommentsStr[$j] -eq ']')) {
+                $i++
+                continue
+            }
+        }
+
+        [void]$result.Append($ch)
+        $i++
     }
+
+    return $result.ToString()
 }
 
 if (Test-Path $terminalSettingsPath) {
     try {
-        $settings = ConvertFrom-JsonC (Get-Content $terminalSettingsPath -Raw)
+        $settings = ConvertFrom-Json (ConvertTo-StrictJson (Get-Content $terminalSettingsPath -Raw))
     } catch {
         $settings = $null
     }
@@ -161,7 +216,7 @@ if (-not (Test-Path $vscodeSettingsPath)) {
 }
 
 try {
-    $vscodeSettings = ConvertFrom-JsonC (Get-Content $vscodeSettingsPath -Raw)
+    $vscodeSettings = ConvertFrom-Json (ConvertTo-StrictJson (Get-Content $vscodeSettingsPath -Raw))
 } catch {
     $vscodeSettings = $null
 }
