@@ -6,7 +6,9 @@ NVM_DIR="${NVM_DIR:-$HOME/.nvm}"
 if [[ -n "${MSYSTEM:-}" ]]; then
     if [[ ! -x /opt/nodejs/node.exe ]]; then
         echo "Install Node.js..."
+        set +o pipefail
         node_version=$(curl -fsSL https://nodejs.org/dist/index.json | grep -o '"version":"[^"]*"[^}]*"lts":"[^"]*"' | head -1 | grep -o '"version":"[^"]*"' | cut -d'"' -f4)
+        set -o pipefail
         pacman -Sy --noconfirm unzip
         curl -fsSL -o /tmp/node.zip "https://nodejs.org/dist/${node_version}/node-${node_version}-win-x64.zip"
         unzip -q -o /tmp/node.zip -d /opt

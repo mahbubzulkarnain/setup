@@ -55,7 +55,9 @@ install_flyenv() {
             amd64) flyenv_arch="x64" ;;
             arm64) flyenv_arch="arm64" ;;
         esac
+        set +o pipefail
         flyenv_deb_url=$(curl -fsSL https://api.github.com/repos/xpf0000/FlyEnv/releases/latest | grep -m1 -oE "https://github\.com/xpf0000/FlyEnv/releases/download/[^\"]*FlyEnv-[0-9.]+-${flyenv_arch}\.deb")
+        set -o pipefail
         curl -fsSL -o /tmp/flyenv.deb "$flyenv_deb_url"
         sudo dpkg -i /tmp/flyenv.deb || sudo apt-get install -f -y
         rm -f /tmp/flyenv.deb
