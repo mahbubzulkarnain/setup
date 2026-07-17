@@ -1,6 +1,14 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+run_remote() {
+    local tmp
+    tmp=$(mktemp)
+    curl -fsSL "$1" -o "$tmp"
+    bash "$tmp"
+    rm -f "$tmp"
+}
+
 install_vscode() {
     if command -v code &>/dev/null; then
         echo "VS Code already installed, skipping."
@@ -79,14 +87,65 @@ install_kali_tools() {
     fi
 }
 
+install_ngrok() {
+    if command -v ngrok &>/dev/null; then
+        echo "ngrok already installed, skipping."
+    else
+        echo "Install ngrok..."
+        curl -fsSL https://ngrok-agent.s3.amazonaws.com/ngrok.asc | sudo tee /etc/apt/trusted.gpg.d/ngrok.asc >/dev/null
+        echo "deb https://ngrok-agent.s3.amazonaws.com buster main" | sudo tee /etc/apt/sources.list.d/ngrok.list > /dev/null
+        sudo apt-get update
+        sudo apt-get install -y ngrok
+    fi
+}
+
+install_chrome() {
+    if dpkg -s google-chrome-stable &>/dev/null; then
+        echo "Google Chrome already installed, skipping."
+    else
+        echo "Install Google Chrome..."
+        curl -fsSL -o /tmp/google-chrome-stable.deb https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
+        sudo dpkg -i /tmp/google-chrome-stable.deb || sudo apt-get install -f -y
+        rm -f /tmp/google-chrome-stable.deb
+    fi
+}
+
+install_tor_browser() {
+    if dpkg -s torbrowser-launcher &>/dev/null; then
+        echo "Tor Browser already installed, skipping."
+    else
+        echo "Install Tor Browser..."
+        sudo apt-get install -y torbrowser-launcher
+    fi
+}
+
+install_spotify() {
+    if snap list spotify &>/dev/null; then
+        echo "Spotify already installed, skipping."
+    else
+        echo "Install Spotify..."
+        sudo snap install spotify
+    fi
+}
+
+install_bruno() {
+    if snap list bruno &>/dev/null; then
+        echo "Bruno already installed, skipping."
+    else
+        echo "Install Bruno..."
+        sudo snap install bruno
+    fi
+}
+
 echo "Update..."
 sudo apt-get update
 
-bash <(curl -s https://raw.githubusercontent.com/mahbubzulkarnain/setup/master/git.sh)
-bash <(curl -s https://raw.githubusercontent.com/mahbubzulkarnain/setup/master/zsh.sh)
-bash <(curl -s https://raw.githubusercontent.com/mahbubzulkarnain/setup/master/npm.sh)
-bash <(curl -s https://raw.githubusercontent.com/mahbubzulkarnain/setup/master/java.sh)
-bash <(curl -s https://raw.githubusercontent.com/mahbubzulkarnain/setup/master/ai.sh)
+run_remote https://raw.githubusercontent.com/mahbubzulkarnain/setup/master/git.sh
+run_remote https://raw.githubusercontent.com/mahbubzulkarnain/setup/master/zsh.sh
+run_remote https://raw.githubusercontent.com/mahbubzulkarnain/setup/master/cli.sh
+run_remote https://raw.githubusercontent.com/mahbubzulkarnain/setup/master/npm.sh
+run_remote https://raw.githubusercontent.com/mahbubzulkarnain/setup/master/java.sh
+run_remote https://raw.githubusercontent.com/mahbubzulkarnain/setup/master/ai.sh
 
 if [ -f /etc/os-release ]; then
     . /etc/os-release
@@ -98,6 +157,13 @@ if [ -f /etc/os-release ]; then
             install_flutter_fvm
             install_typora
             install_flyenv
+            run_remote https://raw.githubusercontent.com/mahbubzulkarnain/setup/master/docker.sh
+            install_ngrok
+            install_chrome
+            install_tor_browser
+            install_spotify
+            install_bruno
+            echo "WhatsApp: tidak ada client resmi untuk Linux, gunakan web.whatsapp.com di browser."
             ;;
         kali)
             echo "Distro: Kali"
@@ -133,7 +199,6 @@ fi
 
 # echo "Installing Development Tools..."
 # sudo snap install postman
-# sudo snap install insomnia
 # sudo snap install altair
 # sudo snap install dbeaver-ce --edge
 # sudo snap install go
@@ -147,20 +212,11 @@ fi
 # sudo snap install google-cloud-sdk
 # sudo snap install heroku
 
-# sudo snap install docker
 # sudo apt-get install redis
 # sudo apt-get install mongodb
 # sudo apt-get install php
 # sudo apt-get install golang
 
-# echo "Install google chrome..."
-# browser_tools_dir=~/Tools/browser
-# mkdir -p $browser_tools_dir && wget -q https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb -O $browser_tools_dir/google-chrome-stable_current_amd64.deb
-# sudo dpkg -i $browser_tools_dir/google-chrome-stable_current_amd64.deb
-
-# sudo snap install tor
-
 # echo "Install Social..."
 # sudo snap install slack
 # sudo snap install skype
-# sudo snap install spotify

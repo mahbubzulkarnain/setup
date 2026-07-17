@@ -1,6 +1,14 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+run_remote() {
+    local tmp
+    tmp=$(mktemp)
+    curl -fsSL "$1" -o "$tmp"
+    bash "$tmp"
+    rm -f "$tmp"
+}
+
 if ! command -v zsh &>/dev/null; then
     echo "Install zsh..."
     if [[ "$OSTYPE" == "linux-gnu" ]]; then
@@ -23,7 +31,7 @@ if ! command -v zsh &>/dev/null; then
         rm -f /tmp/fzf.zip /tmp/fzf.exe
     else
         if ! command -v brew &>/dev/null; then
-            bash <(curl -s https://raw.githubusercontent.com/mahbubzulkarnain/setup/master/brew.sh)
+            run_remote https://raw.githubusercontent.com/mahbubzulkarnain/setup/master/brew.sh
         fi
 
         brew install fzf zsh-syntax-highlighting zsh-autosuggestions

@@ -1,6 +1,14 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+run_remote() {
+    local tmp
+    tmp=$(mktemp)
+    curl -fsSL "$1" -o "$tmp"
+    bash "$tmp"
+    rm -f "$tmp"
+}
+
 install_formula() {
     if brew list "$1" &>/dev/null; then
         echo "$1 already installed, skipping."
@@ -19,7 +27,7 @@ install_cask() {
     fi
 }
 
-bash <(curl -s https://raw.githubusercontent.com/mahbubzulkarnain/setup/master/brew.sh)
+run_remote https://raw.githubusercontent.com/mahbubzulkarnain/setup/master/brew.sh
 jenv add "$(/usr/libexec/java_home)"
 
 # Install Xcode command line tools
@@ -29,7 +37,7 @@ else
     xcode-select --install
 fi
 
-bash <(curl -s https://raw.githubusercontent.com/mahbubzulkarnain/setup/master/git.sh)
+run_remote https://raw.githubusercontent.com/mahbubzulkarnain/setup/master/git.sh
 
 # brew install --cask java
 # brew install maven
@@ -58,15 +66,20 @@ fi
 echo "Install iterm..."
 # brew cask install iterm2
 
-bash <(curl -s https://raw.githubusercontent.com/mahbubzulkarnain/setup/master/zsh.sh)
+run_remote https://raw.githubusercontent.com/mahbubzulkarnain/setup/master/zsh.sh
+run_remote https://raw.githubusercontent.com/mahbubzulkarnain/setup/master/cli.sh
 
 echo "Install NodeJS LTS Version"
+export NVM_DIR="$HOME/.nvm"
+mkdir -p "$NVM_DIR"
+# shellcheck disable=SC1091
+[ -s "$(brew --prefix nvm)/nvm.sh" ] && \. "$(brew --prefix nvm)/nvm.sh"
 nvm install --lts
-bash <(curl -s https://raw.githubusercontent.com/mahbubzulkarnain/setup/master/npm.sh)
-bash <(curl -s https://raw.githubusercontent.com/mahbubzulkarnain/setup/master/ai.sh)
+run_remote https://raw.githubusercontent.com/mahbubzulkarnain/setup/master/npm.sh
+run_remote https://raw.githubusercontent.com/mahbubzulkarnain/setup/master/ai.sh
 
 install_formula go
-bash <(curl -s https://raw.githubusercontent.com/mahbubzulkarnain/setup/master/gomod.sh)
+run_remote https://raw.githubusercontent.com/mahbubzulkarnain/setup/master/gomod.sh
 
 # echo "Install ruby..."
 # echo "gem: --no-document" >> ~/.gemrc
@@ -81,8 +94,8 @@ bash <(curl -s https://raw.githubusercontent.com/mahbubzulkarnain/setup/master/g
 
 echo "Installing Development Tools..."
 install_cask visual-studio-code
-install_cask insomnia
-install_cask dbeaver-community
+install_cask bruno
+# install_cask dbeaver-community
 # brew cask install altair-graphql-client
 # brew install awscli
 # brew cask install sequel-pro
@@ -92,7 +105,7 @@ install_cask dbeaver-community
 
 # brew cask install intellij-idea
 # brew cask install webstorm
-install_cask goland
+# install_cask goland
 
 # brew cask install vysor
 # brew cask install android-sdk
@@ -103,7 +116,7 @@ install_cask goland
 # brew tap heroku/brew && brew install heroku
 install_cask ngrok
 
-install_formula docker
+run_remote https://raw.githubusercontent.com/mahbubzulkarnain/setup/master/docker.sh
 # brew install postgres
 # brew install redis
 # brew install php

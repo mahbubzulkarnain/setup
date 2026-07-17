@@ -23,6 +23,11 @@ if [ "$(git config --global user.name)" != "Mahbub Zulkarnain" ]; then
     git config --global user.name "Mahbub Zulkarnain"
 fi
 
+# if [ "$(git config --global user.email)" != "mahbub.zulkarnain@gmail.com" ]; then
+    # echo "Setting up Git user.email..."
+    # git config --global user.email "mahbub.zulkarnain@gmail.com"
+# fi
+
 # echo "Setting up Git aliases..."
 # git config --global alias.gst git status
 # git config --global alias.st status

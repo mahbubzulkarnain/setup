@@ -1,10 +1,29 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-bash <(curl -s https://raw.githubusercontent.com/mahbubzulkarnain/setup/master/git.sh)
-bash <(curl -s https://raw.githubusercontent.com/mahbubzulkarnain/setup/master/zsh.sh)
-bash <(curl -s https://raw.githubusercontent.com/mahbubzulkarnain/setup/master/npm.sh)
-bash <(curl -s https://raw.githubusercontent.com/mahbubzulkarnain/setup/master/ai.sh)
+run_remote() {
+    local tmp
+    tmp=$(mktemp)
+    curl -fsSL "$1" -o "$tmp"
+    bash "$tmp"
+    rm -f "$tmp"
+}
+
+winget_install() {
+    local id="$1"
+    if winget.exe list --id "$id" -e --accept-source-agreements >/dev/null 2>&1; then
+        echo "$id already installed, skipping."
+    else
+        echo "Install $id..."
+        winget.exe install --id "$id" -e --accept-package-agreements --accept-source-agreements
+    fi
+}
+
+run_remote https://raw.githubusercontent.com/mahbubzulkarnain/setup/master/git.sh
+run_remote https://raw.githubusercontent.com/mahbubzulkarnain/setup/master/zsh.sh
+run_remote https://raw.githubusercontent.com/mahbubzulkarnain/setup/master/cli.sh
+run_remote https://raw.githubusercontent.com/mahbubzulkarnain/setup/master/npm.sh
+run_remote https://raw.githubusercontent.com/mahbubzulkarnain/setup/master/ai.sh
 
 # FlyEnv (https://github.com/xpf0000/FlyEnv)
 if MSYS_NO_PATHCONV=1 reg.exe query "HKCU\Software\Microsoft\Windows\CurrentVersion\Uninstall" /s /f "FlyEnv" >/dev/null 2>&1 || \
@@ -22,3 +41,15 @@ else
     /tmp/FlyEnv-Setup.exe
     rm -f /tmp/FlyEnv-Setup.exe
 fi
+
+echo "Installing Development Tools..."
+winget_install Ngrok.Ngrok
+winget_install Bruno.Bruno
+
+echo "Install browser..."
+winget_install Google.Chrome
+winget_install TorProject.TorBrowser
+
+echo "Install Social..."
+winget_install WhatsApp.WhatsApp
+winget_install Spotify.Spotify

@@ -26,6 +26,14 @@ if (-not (Test-Path $vscodeExe)) {
     Write-Host "VS Code already installed, skipping."
 }
 
+$dockerDesktopExe = "$env:ProgramFiles\Docker\Docker\Docker Desktop.exe"
+if (-not (Test-Path $dockerDesktopExe)) {
+    Write-Host "Installing Docker Desktop..."
+    winget install --id Docker.DockerDesktop -e --accept-package-agreements --accept-source-agreements
+} else {
+    Write-Host "Docker Desktop already installed, skipping."
+}
+
 function Update-SessionPath {
     $env:Path = [System.Environment]::GetEnvironmentVariable("Path", "Machine") + ";" + [System.Environment]::GetEnvironmentVariable("Path", "User")
 }
@@ -67,26 +75,36 @@ if ($hasVCTools) {
 }
 
 if (Test-Path $terminalSettingsPath) {
-    $settings = Get-Content $terminalSettingsPath -Raw | ConvertFrom-Json
-    $existingProfile = $settings.profiles.list | Where-Object { $_.guid -eq $zshProfileGuid }
-
-    if (-not $existingProfile) {
-        Write-Host "Adding Zsh (MSYS2) Windows Terminal profile..."
-        $zshProfile = [ordered]@{
-            commandline       = "C:\msys64\msys2_shell.cmd -defterm -no-start -msys2 -shell zsh"
-            guid              = $zshProfileGuid
-            hidden            = $false
-            icon              = "C:\msys64\msys2.ico"
-            name              = "Zsh (MSYS2)"
-            startingDirectory = "%USERPROFILE%"
-        }
-        $settings.profiles.list = @($zshProfile) + @($settings.profiles.list)
-    } else {
-        Write-Host "Zsh (MSYS2) Windows Terminal profile already present, skipping."
+    try {
+        $settings = Get-Content $terminalSettingsPath -Raw | ConvertFrom-Json
+    } catch {
+        $settings = $null
     }
 
-    $settings.defaultProfile = $zshProfileGuid
-    $settings | ConvertTo-Json -Depth 10 | Set-Content $terminalSettingsPath -Encoding utf8
+    if ($null -eq $settings) {
+        Write-Host "Could not parse Windows Terminal settings.json (it may contain comments) - skipping terminal profile setup. Add manually: 'Zsh (MSYS2)' profile running 'C:\msys64\msys2_shell.cmd -defterm -no-start -msys2 -shell zsh'."
+    } else {
+        $existingProfile = $settings.profiles.list | Where-Object { $_.guid -eq $zshProfileGuid }
+
+        if (-not $existingProfile) {
+            Write-Host "Adding Zsh (MSYS2) Windows Terminal profile..."
+            $zshProfile = [ordered]@{
+                commandline       = "C:\msys64\msys2_shell.cmd -defterm -no-start -msys2 -shell zsh"
+                guid              = $zshProfileGuid
+                hidden            = $false
+                icon              = "C:\msys64\msys2.ico"
+                name              = "Zsh (MSYS2)"
+                startingDirectory = "%USERPROFILE%"
+            }
+            $settings.profiles.list = @($zshProfile) + @($settings.profiles.list)
+        } else {
+            Write-Host "Zsh (MSYS2) Windows Terminal profile already present, skipping."
+        }
+
+        $settings.defaultProfile = $zshProfileGuid
+        Copy-Item $terminalSettingsPath "$terminalSettingsPath.bak" -Force
+        $settings | ConvertTo-Json -Depth 10 | Set-Content $terminalSettingsPath -Encoding utf8
+    }
 } else {
     Write-Host "Windows Terminal settings.json not found, skipping terminal profile setup."
 }
@@ -109,8 +127,12 @@ if ($null -eq $vscodeSettings) {
     Write-Host "Could not parse VS Code settings.json (it may contain comments) - skipping default terminal setup. Add manually: MSYS2 zsh profile named '$msys2ZshProfileName'."
 } else {
     $msys2Profile = [PSCustomObject]@{
-        path = "C:\msys64\msys2_shell.cmd"
-        args = @("-defterm", "-no-start", "-msys2", "-shell", "zsh", "-here")
+        path = "C:\msys64\usr\bin\zsh.exe"
+        args = @("--login", "-i")
+        env  = [PSCustomObject]@{
+            MSYSTEM        = "MSYS"
+            CHERE_INVOKING = "1"
+        }
         icon = "terminal-bash"
     }
 
@@ -130,9 +152,13 @@ if ($null -eq $vscodeSettings) {
         $vscodeSettings | Add-Member -NotePropertyName 'terminal.integrated.defaultProfile.windows' -NotePropertyValue $msys2ZshProfileName
     }
 
+    Copy-Item $vscodeSettingsPath "$vscodeSettingsPath.bak" -Force
     $vscodeSettings | ConvertTo-Json -Depth 10 | Set-Content $vscodeSettingsPath -Encoding utf8
     Write-Host "VS Code default terminal set to $msys2ZshProfileName."
 }
 
 Write-Host "Handing off to install.sh inside MSYS2 bash..."
-& $msys2Bash -lc "bash <(curl -s https://raw.githubusercontent.com/mahbubzulkarnain/setup/master/install.sh)"
+& $msys2Bash -lc "curl -fsSL https://raw.githubusercontent.com/mahbubzulkarnain/setup/master/install.sh -o /tmp/install.sh && bash /tmp/install.sh; rm -f /tmp/install.sh"
+if ($LASTEXITCODE -ne 0) {
+    throw "install.sh inside MSYS2 bash failed with exit code $LASTEXITCODE"
+}

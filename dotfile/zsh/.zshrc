@@ -133,7 +133,7 @@ alias dclog='docker-compose logs -f'
 alias gorun='nodemon --exec go run main.go --signal SIGTERM'
 
 # Alias for show golang test coverage
-alias gotc='go test -cover'
+alias gotc='go test ./... -cover'
 
 # Alias for run golang test
 alias got='go test ./... -v'

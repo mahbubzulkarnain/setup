@@ -7,6 +7,6 @@ if [ -d "$HOME/.sdkman" ]; then
     fi
 else
     echo "Install SDKMAN..."
-    curl -s "https://get.sdkman.io" | bash
+    curl -fsSL "https://get.sdkman.io" | bash
     source "$HOME/.sdkman/bin/sdkman-init.sh"
 fi
