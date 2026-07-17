@@ -48,7 +48,6 @@ if command -v npm &>/dev/null; then
 
     # Debugging
     npm i -g ndb
-    npm i -g node-inspector
 
     # Firebase
     # npm i -g firebase-tools
