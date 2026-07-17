@@ -6,8 +6,6 @@
 bash <(curl -s https://raw.githubusercontent.com/mahbubzulkarnain/setup/master/install.sh)
 ```
 
-###### Windows
-
 ```powershell
 irm https://raw.githubusercontent.com/mahbubzulkarnain/setup/master/install.ps1 | iex
 ```
