@@ -74,9 +74,52 @@ if ($hasVCTools) {
     winget install --id Microsoft.VisualStudio.2022.BuildTools -e --accept-package-agreements --accept-source-agreements --override "--wait --quiet --add Microsoft.VisualStudio.Workload.VCTools --includeRecommended"
 }
 
+function ConvertFrom-JsonC {
+    param([Parameter(Mandatory)][string]$Json)
+
+    function Convert-JsonElement($element) {
+        switch ($element.ValueKind) {
+            'Object' {
+                $obj = [ordered]@{}
+                foreach ($prop in $element.EnumerateObject()) {
+                    $obj[$prop.Name] = Convert-JsonElement $prop.Value
+                }
+                return [PSCustomObject]$obj
+            }
+            'Array' {
+                $arr = @()
+                foreach ($item in $element.EnumerateArray()) {
+                    $arr += , (Convert-JsonElement $item)
+                }
+                return , $arr
+            }
+            'String' { return $element.GetString() }
+            'Number' {
+                $asLong = 0L
+                if ($element.TryGetInt64([ref]$asLong)) { return $asLong }
+                return $element.GetDouble()
+            }
+            'True' { return $true }
+            'False' { return $false }
+            default { return $null }
+        }
+    }
+
+    $options = New-Object System.Text.Json.JsonDocumentOptions
+    $options.CommentHandling = [System.Text.Json.JsonCommentHandling]::Skip
+    $options.AllowTrailingCommas = $true
+
+    $doc = [System.Text.Json.JsonDocument]::Parse($Json, $options)
+    try {
+        return Convert-JsonElement $doc.RootElement
+    } finally {
+        $doc.Dispose()
+    }
+}
+
 if (Test-Path $terminalSettingsPath) {
     try {
-        $settings = Get-Content $terminalSettingsPath -Raw | ConvertFrom-Json
+        $settings = ConvertFrom-JsonC (Get-Content $terminalSettingsPath -Raw)
     } catch {
         $settings = $null
     }
@@ -118,7 +161,7 @@ if (-not (Test-Path $vscodeSettingsPath)) {
 }
 
 try {
-    $vscodeSettings = Get-Content $vscodeSettingsPath -Raw | ConvertFrom-Json
+    $vscodeSettings = ConvertFrom-JsonC (Get-Content $vscodeSettingsPath -Raw)
 } catch {
     $vscodeSettings = $null
 }
