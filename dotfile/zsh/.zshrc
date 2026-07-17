@@ -370,6 +370,8 @@ case "$(uname -s)" in
     CYGWIN*|MINGW*|MSYS*)
         # Windows (using Git Bash, WSL, or similar)
         [[ -d /opt/nodejs ]] && export PATH="/opt/nodejs:$PATH"
+        win_home=$(cygpath "$USERPROFILE")
+        [[ -d "$win_home/AppData/Local/Programs/Microsoft VS Code/bin" ]] && export PATH="$PATH:$win_home/AppData/Local/Programs/Microsoft VS Code/bin"
         ;;
     *)
         export OS_TYPE="unknown"
