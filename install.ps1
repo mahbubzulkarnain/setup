@@ -35,6 +35,31 @@ if (-not (Test-Path $dockerDesktopExe)) {
     Write-Host "Docker Desktop already installed, skipping."
 }
 
+function Install-WingetPackage {
+    # winget's App Execution Alias doesn't resolve from MSYS2 bash, so
+    # these installs have to happen here in PowerShell, not in windows.sh.
+    param([Parameter(Mandatory)][string]$Id)
+    winget list --id $Id -e --accept-source-agreements *> $null
+    if ($LASTEXITCODE -eq 0) {
+        Write-Host "$Id already installed, skipping."
+    } else {
+        Write-Host "Installing $Id..."
+        winget install --id $Id -e --accept-package-agreements --accept-source-agreements
+    }
+}
+
+Write-Host "Installing Development Tools..."
+Install-WingetPackage Ngrok.Ngrok
+Install-WingetPackage Bruno.Bruno
+
+Write-Host "Install browser..."
+Install-WingetPackage Google.Chrome
+Install-WingetPackage TorProject.TorBrowser
+
+Write-Host "Install Social..."
+Install-WingetPackage WhatsApp.WhatsApp
+Install-WingetPackage Spotify.Spotify
+
 function Update-SessionPath {
     $env:Path = [System.Environment]::GetEnvironmentVariable("Path", "Machine") + ";" + [System.Environment]::GetEnvironmentVariable("Path", "User")
 }
