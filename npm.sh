@@ -33,13 +33,14 @@ if [[ "$install_npm_packages" == "1" ]]; then
     npm i -g node-gyp nodemon pm2 live-server
 
     # AI tools
-    npm i -g @anthropic-ai/claude-code
+    # npm i -g @anthropic-ai/claude-code
+
     # npm i -g serverless
     # npm i -g aws-sam-local
 
-    #npm i -g http-server
-    #npm i -g json-server
-    #npm i -g localtunnel
+    # npm i -g http-server
+    # npm i -g json-server
+    # npm i -g localtunnel
 
     # Database
     # npm i -g sequelize-cli
@@ -67,14 +68,14 @@ if [[ "$install_npm_packages" == "1" ]]; then
     npm i -g standard
     npm i -g typescript
     npm i -g tslint
-    #npm i -g babel-eslint
-    #npm i -g eslint-config-standard
-    #npm i -g eslint-config-standard-react
-    #npm i -g eslint-config-standard-jsx
-    #npm i -g eslint-plugin-react
-    #npm i -g eslint-config-prettier
-    #npm i -g eslint-plugin-prettier
-    #npm i -g prettier
+    # npm i -g babel-eslint
+    # npm i -g eslint-config-standard
+    # npm i -g eslint-config-standard-react
+    # npm i -g eslint-config-standard-jsx
+    # npm i -g eslint-plugin-react
+    # npm i -g eslint-config-prettier
+    # npm i -g eslint-plugin-prettier
+    # npm i -g prettier
 
     # Test
     npm i -g mocha
@@ -82,22 +83,22 @@ if [[ "$install_npm_packages" == "1" ]]; then
 
     # Utilities
     npm i -g now
-    #npm i -g branch-diff
-    #npm i -g tldr
-    #npm i -g spoof
-    #npm i -g fkill-cli
-    #npm i -g castnow
-    #npm i -g github-is-starred-cli
-    #npm i -g vtop
+    # npm i -g branch-diff
+    # npm i -g tldr
+    # npm i -g spoof
+    # npm i -g fkill-cli
+    # npm i -g castnow
+    # npm i -g github-is-starred-cli
+    # npm i -g vtop
 
     #david - Find Out When Your Dependencies are Outdated
     #npm i -g david
 
     # Working with npm
-    npm i -g yarn
-    #npm i -g npx
-    #npm i -g np
-    #npm i -g npm-name-cli
+    # npm i -g yarn
+    # npm i -g npx
+    # npm i -g np
+    # npm i -g npm-name-cli
 
     echo "Check list global node_modules..."
     npm list -g --depth 0

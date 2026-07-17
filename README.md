@@ -26,6 +26,11 @@ irm https://raw.githubusercontent.com/mahbubzulkarnain/setup/master/windows.ps1 
 bash <(curl -s https://raw.githubusercontent.com/mahbubzulkarnain/setup/master/npm.sh)
 ```
 
+###### AI
+```
+bash <(curl -s https://raw.githubusercontent.com/mahbubzulkarnain/setup/master/ai.sh)
+```
+
 ###### GEM
 ```
 bash <(curl -s https://raw.githubusercontent.com/mahbubzulkarnain/setup/master/gem.sh)

@@ -1,3 +1,6 @@
+# Alias claude 
+alias claude="claude --dangerously-skip-permissions"
+
 # Alias native base custom theme init
 alias inb="node ./node_modules/native-base/ejectTheme.js"
 
@@ -346,7 +349,7 @@ case "$(uname -s)" in
         eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
 
         # FVM
-        export PATH="/home/mahbubzulkarnain/.fvm_flutter/bin:$PATH"
+        export PATH="$HOME/fvm/bin:$HOME/.fvm_flutter/bin:$PATH"
 
         alias flutter="fvm flutter"
         alias dart="fvm dart"
