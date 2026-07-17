@@ -1,5 +1,12 @@
 $ErrorActionPreference = "Stop"
 
+$isAdmin = ([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltinRole]::Administrator)
+if (-not $isAdmin) {
+    Write-Host "This script installs system-wide tools (winget, Chocolatey packages) and needs Administrator rights."
+    Write-Host "Re-run PowerShell as Administrator, then run this script again."
+    exit 1
+}
+
 $msys2Bash = "C:\msys64\usr\bin\bash.exe"
 $zshProfileGuid = "{c0f7f34e-1234-5f8a-9a2b-7d9f2b1a0e01}"
 $terminalSettingsPath = "$env:LOCALAPPDATA\Packages\Microsoft.WindowsTerminal_8wekyb3d8bbwe\LocalState\settings.json"
