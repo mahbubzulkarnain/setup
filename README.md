@@ -9,7 +9,7 @@ bash <(curl -s https://raw.githubusercontent.com/mahbubzulkarnain/setup/master/i
 ###### Windows
 
 ```powershell
-irm https://raw.githubusercontent.com/mahbubzulkarnain/setup/master/windows.ps1 | iex
+irm https://raw.githubusercontent.com/mahbubzulkarnain/setup/master/install.ps1 | iex
 ```
 
 ###### Linux
