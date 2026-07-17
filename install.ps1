@@ -278,6 +278,16 @@ if ($null -eq $vscodeSettings) {
         $vscodeSettings | Add-Member -NotePropertyName 'terminal.integrated.defaultProfile.windows' -NotePropertyValue $msys2ZshProfileName
     }
 
+    # Without this, VS Code revives the previous shell process on restart
+    # instead of spawning a new one with the (possibly just-changed) default
+    # profile above - so the profile change above appears to have no effect
+    # until the stale terminal tab is closed manually.
+    if ($vscodeSettings.PSObject.Properties['terminal.integrated.persistentSessionReviveProcess']) {
+        $vscodeSettings.'terminal.integrated.persistentSessionReviveProcess' = 'never'
+    } else {
+        $vscodeSettings | Add-Member -NotePropertyName 'terminal.integrated.persistentSessionReviveProcess' -NotePropertyValue 'never'
+    }
+
     Copy-Item $vscodeSettingsPath "$vscodeSettingsPath.bak" -Force
     $vscodeSettings | ConvertTo-Json -Depth 10 | Set-Content $vscodeSettingsPath -Encoding utf8
     Write-Host "VS Code default terminal set to $msys2ZshProfileName."
