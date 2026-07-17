@@ -16,6 +16,6 @@ else
     flyenv_installer_url=$(curl -fsSL https://api.github.com/repos/xpf0000/FlyEnv/releases/latest | grep -m1 -oE 'https://github\.com/xpf0000/FlyEnv/releases/download/[^"]*/FlyEnv-Setup-[0-9.]+\.exe')
     set -o pipefail
     curl -fsSL -o /tmp/FlyEnv-Setup.exe "$flyenv_installer_url"
-    /tmp/FlyEnv-Setup.exe
+    /tmp/FlyEnv-Setup.exe /S
     rm -f /tmp/FlyEnv-Setup.exe
 fi
