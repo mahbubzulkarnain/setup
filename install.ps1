@@ -1,4 +1,5 @@
 $ErrorActionPreference = "Stop"
+Write-Host "PowerShell version: $($PSVersionTable.PSVersion)"
 
 $isAdmin = ([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltinRole]::Administrator)
 if (-not $isAdmin) {
@@ -177,6 +178,7 @@ if (Test-Path $terminalSettingsPath) {
         $settings = ConvertFrom-Json (ConvertTo-StrictJson (Get-Content $terminalSettingsPath -Raw))
     } catch {
         $settings = $null
+        Write-Host "Windows Terminal settings.json parse error: $($_.Exception.Message)"
     }
 
     if ($null -eq $settings) {
@@ -219,6 +221,7 @@ try {
     $vscodeSettings = ConvertFrom-Json (ConvertTo-StrictJson (Get-Content $vscodeSettingsPath -Raw))
 } catch {
     $vscodeSettings = $null
+    Write-Host "VS Code settings.json parse error: $($_.Exception.Message)"
 }
 
 if ($null -eq $vscodeSettings) {
