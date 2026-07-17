@@ -1,17 +1,5 @@
-# Machine name.
-function box_name {
-    [ -f ~/.box-name ] && cat ~/.box-name || echo $HOST
-}
-
-# Current time info
-local current_time='%{$fg[white]%}at %{$terminfo[bold]%}%D{%f/%m/%Y} %D{%H:%M:%S %Z}%{$reset_color%}'
-
 # Directory info.
 local current_dir='%{$fg[white]%}in %{$reset_color%}%{$terminfo[bold]$fg[yellow]%}${PWD/#$HOME/~}%{$reset_color%}'
-
-current_os(){
-  echo -n '%{$terminfo[bold]%}%{$reset_color%}'
-}
 
 # VCS
 YS_VCS_PROMPT_PREFIX1="%{$fg[white]%}on%{$reset_color%} "
@@ -22,6 +10,7 @@ YS_VCS_PROMPT_CLEAN=" %{$fg[green]%}✔︎ "
 
 # Git info.
 local git_info='$(git_prompt_info)'
+local git_status='$(git_prompt_status)'
 local git_last_commit='$(git log --pretty=format:"%h%{$terminfo[bold]$fg[green]%} \"%s\"%{$reset_color%}" -1 2> /dev/null) '
 ZSH_THEME_GIT_PROMPT_PREFIX="${YS_VCS_PROMPT_PREFIX1}git${YS_VCS_PROMPT_PREFIX2}"
 ZSH_THEME_GIT_PROMPT_SUFFIX="$YS_VCS_PROMPT_SUFFIX"
@@ -45,5 +34,5 @@ ys_hg_prompt_info() {
 }
 
 PROMPT="
-%{$fg[cyan]%}%n %{$fg[white]%}${current_dir}%{$reset_color%}${hg_info} ${git_info}${git_last_commit}${git_prompt_status}
+%{$fg[cyan]%}%n %{$fg[white]%}${current_dir}%{$reset_color%}${hg_info} ${git_info}${git_status}${git_last_commit}
 %{$terminfo[bold]$fg[white]%}› %{$reset_color%}"
