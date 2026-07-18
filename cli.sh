@@ -2,6 +2,7 @@
 set -euo pipefail
 
 # Modern CLI tools: ripgrep, fd, bat, lazygit
+# Plus build tools (make, gcc, etc.) so Makefiles work the same on every platform.
 
 run_remote() {
     local tmp
@@ -69,6 +70,13 @@ if [[ "$OSTYPE" == "darwin"* ]]; then
         run_remote https://raw.githubusercontent.com/mahbubzulkarnain/setup/master/brew.sh
     fi
 
+    if xcode-select -p &>/dev/null; then
+        echo "Xcode command line tools (make, clang, ...) already installed, skipping."
+    else
+        echo "Install Xcode command line tools..."
+        xcode-select --install
+    fi
+
     for pkg in ripgrep fd bat lazygit; do
         if brew list "$pkg" &>/dev/null; then
             echo "$pkg already installed, skipping."
@@ -81,6 +89,12 @@ if [[ "$OSTYPE" == "darwin"* ]]; then
 elif [[ "$OSTYPE" == "linux-gnu"* ]]; then
     echo "Update..."
     sudo apt-get update
+    if dpkg -s build-essential &>/dev/null; then
+        echo "build-essential (make, gcc, ...) already installed, skipping."
+    else
+        echo "Install build-essential..."
+        sudo apt-get install -y build-essential
+    fi
     sudo apt-get install -y ripgrep fd-find bat
 
     mkdir -p ~/.local/bin
@@ -95,10 +109,23 @@ elif [[ "$OSTYPE" == "linux-gnu"* ]]; then
     install_lazygit_from_release Linux "$lazygit_arch" tar.gz lazygit /usr/local/bin
 
 elif [[ -n "${MSYSTEM:-}" ]]; then
+    if pacman -Qi base-devel &>/dev/null; then
+        echo "base-devel (make, gcc, ...) already installed, skipping."
+    else
+        echo "Install base-devel..."
+        pacman -Sy --noconfirm base-devel
+    fi
+
+    if pacman -Qi unzip &>/dev/null; then
+        echo "unzip already installed, skipping."
+    else
+        echo "Install unzip..."
+        pacman -Sy --noconfirm unzip
+    fi
+
     # ripgrep/fd/bat aren't in the base "msys" pacman repo (only under
     # mingw-w64-* subsystems that aren't on PATH here), so grab the
     # official prebuilt Windows binaries instead, same as lazygit below.
-    pacman -Sy --noconfirm unzip
     install_exe_from_release_zip BurntSushi/ripgrep 'ripgrep-[^"]*-x86_64-pc-windows-msvc\.zip' rg
     install_exe_from_release_zip sharkdp/fd 'fd-[^"]*-x86_64-pc-windows-msvc\.zip' fd
     install_exe_from_release_zip sharkdp/bat 'bat-[^"]*-x86_64-pc-windows-msvc\.zip' bat
