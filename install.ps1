@@ -288,6 +288,17 @@ if ($null -eq $vscodeSettings) {
         $vscodeSettings | Add-Member -NotePropertyName 'terminal.integrated.persistentSessionReviveProcess' -NotePropertyValue 'never'
     }
 
+    # Without this, splitting a Zsh (MSYS2) terminal fails with
+    # "Starting directory (cwd) ... does not exist" - the split inherits
+    # the parent terminal's cwd as reported by shell integration, which
+    # MSYS2 zsh reports in POSIX form (/c/Users/...) instead of a Windows
+    # path, and Windows can't spawn a process with that as its cwd.
+    if ($vscodeSettings.PSObject.Properties['terminal.integrated.splitCwd']) {
+        $vscodeSettings.'terminal.integrated.splitCwd' = 'workspaceRoot'
+    } else {
+        $vscodeSettings | Add-Member -NotePropertyName 'terminal.integrated.splitCwd' -NotePropertyValue 'workspaceRoot'
+    }
+
     Copy-Item $vscodeSettingsPath "$vscodeSettingsPath.bak" -Force
     $vscodeSettings | ConvertTo-Json -Depth 10 | Set-Content $vscodeSettingsPath -Encoding utf8
     Write-Host "VS Code default terminal set to $msys2ZshProfileName."
