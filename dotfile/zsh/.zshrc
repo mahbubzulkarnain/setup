@@ -197,10 +197,6 @@ esac
 # export PATH=$PATH:$ANDROID_HOME/tools/bin
 # export PATH=$PATH:$ANDROID_HOME/platform-tools
 
-# Flutter
-# export FLUTTERROOT=$HOME/Systems/flutter
-# export PATH=$PATH:$FLUTTERROOT/bin
-
 # Golang
 # export GOPATH=$HOME/Systems/Golang
 # export GOROOT=/usr/local/opt/go/libexec
@@ -375,6 +371,12 @@ case "$(uname -s)" in
         [[ -d /opt/nodejs ]] && export PATH="/opt/nodejs:$PATH"
         win_home=$(cygpath "$USERPROFILE")
         [[ -d "$win_home/AppData/Local/Programs/Microsoft VS Code/bin" ]] && export PATH="$PATH:$win_home/AppData/Local/Programs/Microsoft VS Code/bin"
+
+        # Chocolatey (fvm, and other choco-installed CLIs)
+        [[ -d /c/ProgramData/chocolatey/bin ]] && export PATH="$PATH:/c/ProgramData/chocolatey/bin"
+
+        # Flutter/Dart from FVM's global version (fvm global <version>), not the standalone SDK
+        [[ -d "$HOME/fvm/default/bin" ]] && export PATH="$HOME/fvm/default/bin:$PATH"
         ;;
     *)
         export OS_TYPE="unknown"
