@@ -375,6 +375,9 @@ case "$(uname -s)" in
         # Chocolatey (fvm, and other choco-installed CLIs)
         [[ -d /c/ProgramData/chocolatey/bin ]] && export PATH="$PATH:/c/ProgramData/chocolatey/bin"
 
+        # AWS CLI (installed via winget/MSI to Program Files, not on MSYS2's PATH by default)
+        [[ -d "/c/Program Files/Amazon/AWSCLIV2" ]] && export PATH="$PATH:/c/Program Files/Amazon/AWSCLIV2"
+
         # Flutter/Dart from FVM's global version (fvm global <version>), not the standalone SDK
         [[ -d "$HOME/fvm/default/bin" ]] && export PATH="$HOME/fvm/default/bin:$PATH"
         ;;
