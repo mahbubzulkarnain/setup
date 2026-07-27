@@ -1,5 +1,8 @@
-# Alias claude 
+# Alias claude
 alias claude="claude --dangerously-skip-permissions"
+
+# Activate nara/indexer venv (use forward slashes, bash strips Windows backslashes)
+alias nara-venv="source /c/Users/CODE.ID/Repository/github.com/mahbubzulkarnain/nara/indexer/.venv/Scripts/activate"
 
 # Alias native base custom theme init
 alias inb="node ./node_modules/native-base/ejectTheme.js"
