@@ -378,6 +378,10 @@ case "$(uname -s)" in
         # AWS CLI (installed via winget/MSI to Program Files, not on MSYS2's PATH by default)
         [[ -d "/c/Program Files/Amazon/AWSCLIV2" ]] && export PATH="$PATH:/c/Program Files/Amazon/AWSCLIV2"
 
+        # winget-installed CLIs (e.g. kubectl) get a command link here, which
+        # is on Windows' PATH but not inherited by MSYS2's explicit PATH build
+        [[ -d "$win_home/AppData/Local/Microsoft/WinGet/Links" ]] && export PATH="$PATH:$win_home/AppData/Local/Microsoft/WinGet/Links"
+
         # Flutter/Dart from FVM's global version (fvm global <version>), not the standalone SDK
         [[ -d "$HOME/fvm/default/bin" ]] && export PATH="$HOME/fvm/default/bin:$PATH"
         ;;
