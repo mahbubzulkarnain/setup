@@ -137,6 +137,22 @@ install_bruno() {
     fi
 }
 
+install_aws_cli() {
+    if command -v aws &>/dev/null; then
+        echo "AWS CLI already installed, skipping."
+    else
+        echo "Install AWS CLI..."
+        case "$(dpkg --print-architecture)" in
+            amd64) aws_arch="x86_64" ;;
+            arm64) aws_arch="aarch64" ;;
+        esac
+        curl -fsSL "https://awscli.amazonaws.com/awscli-exe-linux-${aws_arch}.zip" -o /tmp/awscliv2.zip
+        unzip -q -o /tmp/awscliv2.zip -d /tmp
+        sudo /tmp/aws/install --update
+        rm -rf /tmp/awscliv2.zip /tmp/aws
+    fi
+}
+
 echo "Update..."
 sudo apt-get update
 
@@ -163,6 +179,7 @@ if [ -f /etc/os-release ]; then
             install_tor_browser
             install_spotify
             install_bruno
+            install_aws_cli
             echo "WhatsApp: tidak ada client resmi untuk Linux, gunakan web.whatsapp.com di browser."
             ;;
         kali)
@@ -202,7 +219,6 @@ fi
 # sudo snap install altair
 # sudo snap install dbeaver-ce --edge
 # sudo snap install go
-# sudo snap install aws-cli
 
 # sudo snap install webstorm
 

@@ -97,7 +97,7 @@ install_cask visual-studio-code
 install_cask bruno
 # install_cask dbeaver-community
 # brew cask install altair-graphql-client
-# brew install awscli
+install_formula awscli
 # brew cask install sequel-pro
 # brew cask install postman
 

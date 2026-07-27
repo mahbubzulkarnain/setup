@@ -51,6 +51,7 @@ function Install-WingetPackage {
 Write-Host "Installing Development Tools..."
 Install-WingetPackage Ngrok.Ngrok
 Install-WingetPackage Bruno.Bruno
+Install-WingetPackage Amazon.AWSCLI
 
 Write-Host "Install browser..."
 Install-WingetPackage Google.Chrome
