@@ -52,6 +52,7 @@ Write-Host "Installing Development Tools..."
 Install-WingetPackage Ngrok.Ngrok
 Install-WingetPackage Bruno.Bruno
 Install-WingetPackage Amazon.AWSCLI
+Install-WingetPackage Kubernetes.kubectl
 
 Write-Host "Install browser..."
 Install-WingetPackage Google.Chrome

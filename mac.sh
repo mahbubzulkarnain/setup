@@ -98,6 +98,7 @@ install_cask bruno
 # install_cask dbeaver-community
 # brew cask install altair-graphql-client
 install_formula awscli
+install_formula kubernetes-cli
 # brew cask install sequel-pro
 # brew cask install postman
 

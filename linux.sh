@@ -153,6 +153,22 @@ install_aws_cli() {
     fi
 }
 
+install_kubectl() {
+    if command -v kubectl &>/dev/null; then
+        echo "kubectl already installed, skipping."
+    else
+        echo "Install kubectl..."
+        case "$(dpkg --print-architecture)" in
+            amd64) kubectl_arch="amd64" ;;
+            arm64) kubectl_arch="arm64" ;;
+        esac
+        kubectl_version=$(curl -fsSL https://dl.k8s.io/release/stable.txt)
+        curl -fsSL "https://dl.k8s.io/release/${kubectl_version}/bin/linux/${kubectl_arch}/kubectl" -o /tmp/kubectl
+        sudo install -o root -g root -m 0755 /tmp/kubectl /usr/local/bin/kubectl
+        rm -f /tmp/kubectl
+    fi
+}
+
 echo "Update..."
 sudo apt-get update
 
@@ -180,6 +196,7 @@ if [ -f /etc/os-release ]; then
             install_spotify
             install_bruno
             install_aws_cli
+            install_kubectl
             echo "WhatsApp: tidak ada client resmi untuk Linux, gunakan web.whatsapp.com di browser."
             ;;
         kali)
