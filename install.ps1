@@ -24,8 +24,9 @@ function Install-GH {
     # Try choco second
     if (Test-Command "choco") {
         Write-Host "Installing via chocolatey..."
-        choco install gh -y
-        return
+        & choco install gh -y --force 2>$null
+        if ($LASTEXITCODE -eq 0) { return }
+        Write-Host "Chocolatey installation failed (may require admin), trying next method..." -ForegroundColor Yellow
     }
 
     # Try winget third
