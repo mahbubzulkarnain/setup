@@ -28,10 +28,19 @@ install_gh_from_release() {
     fi
 
     local gh_binary
-    gh_binary=$(find "$tmp_dir" -type f -name "gh" -o -name "gh.exe" | head -1)
-
-    if [[ -z "$gh_binary" ]]; then
+    # Look for gh or gh.exe, handling both root and bin/ subdirectory
+    if [[ -f "$tmp_dir/bin/gh.exe" ]]; then
+        gh_binary="$tmp_dir/bin/gh.exe"
+    elif [[ -f "$tmp_dir/bin/gh" ]]; then
+        gh_binary="$tmp_dir/bin/gh"
+    elif [[ -f "$tmp_dir/gh.exe" ]]; then
+        gh_binary="$tmp_dir/gh.exe"
+    elif [[ -f "$tmp_dir/gh" ]]; then
+        gh_binary="$tmp_dir/gh"
+    else
         echo "Error: gh binary not found in archive"
+        echo "Archive contents:"
+        find "$tmp_dir" -type f
         rm -rf "$tmp_archive" "$tmp_dir"
         return 1
     fi
@@ -39,9 +48,11 @@ install_gh_from_release() {
     if [[ "$os_name" == "windows" ]]; then
         # For Windows, copy to /usr/bin directly
         cp "$gh_binary" /usr/bin/gh.exe
+        echo "gh installed successfully to /usr/bin/gh.exe"
     else
         # For Unix-like systems, use sudo
         sudo install -m 755 "$gh_binary" /usr/local/bin/gh
+        echo "gh installed successfully to /usr/local/bin/gh"
     fi
     rm -rf "$tmp_archive" "$tmp_dir"
 }
