@@ -38,6 +38,7 @@ else
 fi
 
 run_remote https://raw.githubusercontent.com/mahbubzulkarnain/setup/master/git.sh
+run_remote https://raw.githubusercontent.com/mahbubzulkarnain/setup/master/gh.sh
 
 # brew install --cask java
 # brew install maven

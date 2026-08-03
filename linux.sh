@@ -173,6 +173,7 @@ echo "Update..."
 sudo apt-get update
 
 run_remote https://raw.githubusercontent.com/mahbubzulkarnain/setup/master/git.sh
+run_remote https://raw.githubusercontent.com/mahbubzulkarnain/setup/master/gh.sh
 run_remote https://raw.githubusercontent.com/mahbubzulkarnain/setup/master/zsh.sh
 run_remote https://raw.githubusercontent.com/mahbubzulkarnain/setup/master/cli.sh
 run_remote https://raw.githubusercontent.com/mahbubzulkarnain/setup/master/npm.sh
