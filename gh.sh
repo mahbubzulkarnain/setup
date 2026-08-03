@@ -46,13 +46,18 @@ elif [[ "$OSTYPE" == "linux-gnu"* ]]; then
 
 elif [[ -n "${MSYSTEM:-}" ]]; then
     # Windows (MSYS2)
-    if command -v choco &>/dev/null; then
-        echo "Install gh via Chocolatey..."
-        choco install gh -y
+    echo "Install gh via MSYS2 pacman..."
+
+    # Determine architecture
+    local gh_package="mingw-w64-x86_64-github-cli"
+    if [[ "$MSYSTEM" == "MINGW32" ]]; then
+        gh_package="mingw-w64-i686-github-cli"
+    fi
+
+    if pacman -Qi "$gh_package" &>/dev/null 2>&1; then
+        echo "$gh_package already installed, skipping."
     else
-        echo "Error: Chocolatey not found. Please install Chocolatey first." >&2
-        echo "See: https://chocolatey.org/install" >&2
-        exit 1
+        pacman -Sy --noconfirm "$gh_package"
     fi
 
 else
