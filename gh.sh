@@ -60,7 +60,7 @@ elif [[ -n "${MSYSTEM:-}" ]]; then
         # Fallback: direct download from GitHub releases
         echo "pacman not available, downloading from GitHub releases..."
         set +o pipefail
-        gh_version=$(curl -fsSL https://api.github.com/repos/cli/cli/releases/latest 2>/dev/null | grep -m1 -o '"tag_name":"v[^"]*"' | cut -d'"' -f4 | sed 's/v//')
+        gh_version=$(curl -fsSL https://api.github.com/repos/cli/cli/releases/latest 2>/dev/null | grep -m1 '"tag_name"' | grep -o 'v[0-9.]*' | sed 's/v//')
         set -o pipefail
 
         if [[ -z "$gh_version" ]]; then
@@ -78,8 +78,17 @@ elif [[ -n "${MSYSTEM:-}" ]]; then
         unzip -q -o "$tmp_dir/gh.zip" -d "$tmp_dir"
 
         if [[ -f "$tmp_dir/bin/gh.exe" ]]; then
-            cp "$tmp_dir/bin/gh.exe" /usr/bin/gh.exe
-            echo "GitHub CLI installed to /usr/bin/gh.exe"
+            # Try to copy to /usr/local/bin first (usually writable)
+            if cp "$tmp_dir/bin/gh.exe" /usr/local/bin/gh.exe 2>/dev/null; then
+                echo "GitHub CLI installed to /usr/local/bin/gh.exe"
+            elif cp "$tmp_dir/bin/gh.exe" /usr/bin/gh.exe 2>/dev/null; then
+                echo "GitHub CLI installed to /usr/bin/gh.exe"
+            else
+                # Fallback: try with sudo
+                echo "Attempting install with sudo..."
+                sudo cp "$tmp_dir/bin/gh.exe" /usr/bin/gh.exe
+                echo "GitHub CLI installed to /usr/bin/gh.exe (with sudo)"
+            fi
         else
             echo "Error: gh.exe not found in archive" >&2
             exit 1
