@@ -49,7 +49,7 @@ elif [[ -n "${MSYSTEM:-}" ]]; then
     echo "Install gh via MSYS2 pacman..."
 
     # Determine architecture
-    local gh_package="mingw-w64-x86_64-github-cli"
+    gh_package="mingw-w64-x86_64-github-cli"
     if [[ "$MSYSTEM" == "MINGW32" ]]; then
         gh_package="mingw-w64-i686-github-cli"
     fi
