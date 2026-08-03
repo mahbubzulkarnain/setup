@@ -78,17 +78,27 @@ elif [[ -n "${MSYSTEM:-}" ]]; then
         unzip -q -o "$tmp_dir/gh.zip" -d "$tmp_dir"
 
         if [[ -f "$tmp_dir/bin/gh.exe" ]]; then
-            # Try to copy to /usr/local/bin first (usually writable)
-            if cp "$tmp_dir/bin/gh.exe" /usr/local/bin/gh.exe 2>/dev/null; then
-                echo "GitHub CLI installed to /usr/local/bin/gh.exe"
-            elif cp "$tmp_dir/bin/gh.exe" /usr/bin/gh.exe 2>/dev/null; then
-                echo "GitHub CLI installed to /usr/bin/gh.exe"
-            else
-                # Fallback: try with sudo
-                echo "Attempting install with sudo..."
-                sudo cp "$tmp_dir/bin/gh.exe" /usr/bin/gh.exe
-                echo "GitHub CLI installed to /usr/bin/gh.exe (with sudo)"
+            # Find a writable location in PATH
+            install_dir=""
+            for dir in /usr/local/bin /usr/bin ~/bin ~/.local/bin "$HOME/bin" /c/msys64/home/CODE.ID/bin; do
+                if [[ -d "$dir" ]] && touch "$dir/.test" 2>/dev/null; then
+                    rm -f "$dir/.test"
+                    install_dir="$dir"
+                    break
+                elif [[ ! -d "$dir" ]] && mkdir -p "$dir" 2>/dev/null; then
+                    install_dir="$dir"
+                    break
+                fi
+            done
+
+            if [[ -z "$install_dir" ]]; then
+                echo "Error: Could not find writable directory in PATH" >&2
+                echo "Please manually copy $tmp_dir/bin/gh.exe to a directory in your PATH" >&2
+                exit 1
             fi
+
+            cp "$tmp_dir/bin/gh.exe" "$install_dir/gh.exe"
+            echo "GitHub CLI installed to $install_dir/gh.exe"
         else
             echo "Error: gh.exe not found in archive" >&2
             exit 1
