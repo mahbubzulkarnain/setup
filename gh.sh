@@ -17,6 +17,8 @@ install_gh_from_release() {
     local tmp_archive tmp_dir
     tmp_archive=$(mktemp)
     tmp_dir=$(mktemp -d)
+
+    echo "Downloading gh v${gh_version} for ${os_name}_${arch_name}..."
     curl -fsSL -o "$tmp_archive" "https://github.com/cli/cli/releases/download/v${gh_version}/gh_${gh_version}_${os_name}_${arch_name}.${archive_ext}"
 
     if [[ "$archive_ext" == "zip" ]]; then
@@ -26,8 +28,21 @@ install_gh_from_release() {
     fi
 
     local gh_binary
-    gh_binary=$(find "$tmp_dir" -type f -name "gh" | head -1)
-    sudo install -m 755 "$gh_binary" /usr/local/bin/gh
+    gh_binary=$(find "$tmp_dir" -type f -name "gh" -o -name "gh.exe" | head -1)
+
+    if [[ -z "$gh_binary" ]]; then
+        echo "Error: gh binary not found in archive"
+        rm -rf "$tmp_archive" "$tmp_dir"
+        return 1
+    fi
+
+    if [[ "$os_name" == "windows" ]]; then
+        # For Windows, copy to /usr/bin directly
+        cp "$gh_binary" /usr/bin/gh.exe
+    else
+        # For Unix-like systems, use sudo
+        sudo install -m 755 "$gh_binary" /usr/local/bin/gh
+    fi
     rm -rf "$tmp_archive" "$tmp_dir"
 }
 
@@ -58,8 +73,9 @@ elif [[ "$OSTYPE" == "linux-gnu"* ]]; then
         else
             # For other Linux distros, download from release
             case "$(dpkg --print-architecture)" in
-                amd64) gh_arch="x86_64" ;;
-                arm64) gh_arch="aarch64" ;;
+                amd64) gh_arch="amd64" ;;
+                arm64) gh_arch="arm64" ;;
+                armhf) gh_arch="armv6" ;;
                 *) gh_arch="$(dpkg --print-architecture)" ;;
             esac
             install_gh_from_release linux "$gh_arch" tar.gz
@@ -71,16 +87,7 @@ elif [[ -n "${MSYSTEM:-}" ]]; then
         echo "gh already installed, skipping."
     else
         echo "Install gh..."
-        if pacman -Qi mingw-w64-x86_64-github-cli &>/dev/null; then
-            echo "gh already installed via pacman, skipping."
-        else
-            if pacman -Qi github-cli &>/dev/null 2>/dev/null; then
-                echo "gh already installed, skipping."
-            else
-                echo "Install gh from GitHub releases..."
-                install_gh_from_release windows x86_64 zip
-            fi
-        fi
+        install_gh_from_release windows amd64 zip
     fi
 
 else
