@@ -99,6 +99,14 @@ elif [[ -n "${MSYSTEM:-}" ]]; then
 
             cp "$tmp_dir/bin/gh.exe" "$install_dir/gh.exe"
             echo "GitHub CLI installed to $install_dir/gh.exe"
+
+            # Also try to install for Windows native (PowerShell)
+            if command -v powershell.exe &>/dev/null; then
+                echo ""
+                echo "To also install gh for Windows native (PowerShell), run:"
+                echo "  powershell -Command 'irm https://cli.github.com/install.ps1 | iex'"
+                echo "Or if you have scoop/choco/winget, use those instead."
+            fi
         else
             echo "Error: gh.exe not found in archive" >&2
             exit 1
