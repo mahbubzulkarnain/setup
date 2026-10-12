@@ -1,0 +1,36 @@
+# Starship prompt (https://starship.rs/config/)
+# Replaces the old oh-my-zsh "zul" theme. Same two-line layout:
+#   user in ~/path on git:branch ✗
+#   ›
+
+format = """
+$username\
+$directory\
+$git_branch\
+$git_status
+$character"""
+
+[username]
+show_always = true
+style_user = "bold cyan"
+style_root = "bold red"
+format = "[$user]($style) "
+
+[directory]
+style = "bold yellow"
+format = "in [$path]($style) "
+truncation_length = 10
+truncate_to_repo = false
+
+[git_branch]
+symbol = "git:"
+style = "cyan"
+format = "on [$symbol$branch]($style) "
+
+[git_status]
+style = "red"
+format = "[✗]($style) "
+
+[character]
+success_symbol = "[›](bold white)"
+error_symbol = "[›](red)"

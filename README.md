@@ -22,10 +22,22 @@ bash <(curl -fsSL https://raw.githubusercontent.com/mahbubzulkarnain/setup/maste
 bash <(curl -fsSL https://raw.githubusercontent.com/mahbubzulkarnain/setup/master/mac.sh)
 ```
 
-###### NPM
+###### Windows (Nushell)
+
+```nu
+http get https://raw.githubusercontent.com/mahbubzulkarnain/setup/master/windows.nu | save -f windows.nu; nu windows.nu
+```
+
+###### Claude Code
 
 ```bash
-bash <(curl -fsSL https://raw.githubusercontent.com/mahbubzulkarnain/setup/master/npm.sh)
+bash <(curl -fsSL https://raw.githubusercontent.com/mahbubzulkarnain/setup/master/claude.sh)
+```
+
+###### mise (Node.js, Go, Python, global CLIs)
+
+```bash
+bash <(curl -fsSL https://raw.githubusercontent.com/mahbubzulkarnain/setup/master/mise.sh)
 ```
 
 ###### AI
@@ -52,22 +64,16 @@ bash <(curl -fsSL https://raw.githubusercontent.com/mahbubzulkarnain/setup/maste
 bash <(curl -fsSL https://raw.githubusercontent.com/mahbubzulkarnain/setup/master/gem.sh)
 ```
 
-###### GO Module
-
-```bash
-bash <(curl -fsSL https://raw.githubusercontent.com/mahbubzulkarnain/setup/master/gomod.sh)
-```
-
 ###### VIM
 
 ```bash
 bash <(curl -fsSL https://raw.githubusercontent.com/mahbubzulkarnain/setup/master/vim.sh)
 ```
 
-###### ZSH
+###### Nushell
 
 ```bash
-bash <(curl -fsSL https://raw.githubusercontent.com/mahbubzulkarnain/setup/master/zsh.sh)
+bash <(curl -fsSL https://raw.githubusercontent.com/mahbubzulkarnain/setup/master/nushell.sh)
 ```
 
 [More setup...](https://github.com/mahbubzulkarnain?tab=repositories&q=setup)

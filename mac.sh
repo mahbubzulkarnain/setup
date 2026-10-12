@@ -53,34 +53,19 @@ run_remote https://raw.githubusercontent.com/mahbubzulkarnain/setup/master/gh.sh
 # echo "Install markdown ide..."
 # brew cask install macdown
 
-# Flutter (via FVM, matches the alias/PATH setup in dotfile/zsh/.zshrc)
-install_formula fvm
-if fvm list 2>/dev/null | grep -q "stable"; then
-    echo "Flutter (FVM stable) already installed, skipping."
-else
-    echo "Install Flutter (stable) via FVM..."
-    fvm install stable
-    fvm global stable
-    fvm flutter config --enable-macos-desktop
-fi
 
 echo "Install iterm..."
 # brew cask install iterm2
 
-run_remote https://raw.githubusercontent.com/mahbubzulkarnain/setup/master/zsh.sh
+run_remote https://raw.githubusercontent.com/mahbubzulkarnain/setup/master/nushell.sh
 run_remote https://raw.githubusercontent.com/mahbubzulkarnain/setup/master/cli.sh
 
-echo "Install NodeJS LTS Version"
-export NVM_DIR="$HOME/.nvm"
-mkdir -p "$NVM_DIR"
-# shellcheck disable=SC1091
-[ -s "$(brew --prefix nvm)/nvm.sh" ] && \. "$(brew --prefix nvm)/nvm.sh"
-nvm install --lts
-run_remote https://raw.githubusercontent.com/mahbubzulkarnain/setup/master/npm.sh
+run_remote https://raw.githubusercontent.com/mahbubzulkarnain/setup/master/starship.sh
+run_remote https://raw.githubusercontent.com/mahbubzulkarnain/setup/master/mise.sh
+run_remote https://raw.githubusercontent.com/mahbubzulkarnain/setup/master/flutter.sh
 run_remote https://raw.githubusercontent.com/mahbubzulkarnain/setup/master/ai.sh
-
-install_formula go
-run_remote https://raw.githubusercontent.com/mahbubzulkarnain/setup/master/gomod.sh
+run_remote https://raw.githubusercontent.com/mahbubzulkarnain/setup/master/plaesy.sh
+run_remote https://raw.githubusercontent.com/mahbubzulkarnain/setup/master/claude.sh
 
 # echo "Install ruby..."
 # echo "gem: --no-document" >> ~/.gemrc
@@ -126,9 +111,6 @@ run_remote https://raw.githubusercontent.com/mahbubzulkarnain/setup/master/docke
 
 # brew tap mongodb/brew
 # install_formula mongodb-community
-
-# FlyEnv (https://github.com/xpf0000/FlyEnv)
-install_cask flyenv
 
 echo "Install browser..."
 install_cask google-chrome --appdir="/Applications"

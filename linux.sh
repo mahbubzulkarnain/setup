@@ -24,51 +24,12 @@ install_vscode() {
     fi
 }
 
-install_flutter_fvm() {
-    # Flutter (via FVM, matches the alias/PATH setup in dotfile/zsh/.zshrc)
-    sudo apt-get install -y clang cmake ninja-build pkg-config libgtk-3-dev liblzma-dev
-    export PATH="$HOME/fvm/bin:$PATH"
-    if command -v fvm &>/dev/null; then
-        echo "FVM already installed, skipping."
-    else
-        echo "Install FVM..."
-        curl -fsSL https://fvm.app/install.sh | bash
-    fi
-    if fvm list 2>/dev/null | grep -q "stable"; then
-        echo "Flutter (FVM stable) already installed, skipping."
-    else
-        echo "Install Flutter (stable) via FVM..."
-        fvm install stable
-        fvm global stable
-        fvm flutter config --enable-linux-desktop
-    fi
-}
-
 install_typora() {
     if snap list typora-alanzanattadev &>/dev/null; then
         echo "Typora already installed, skipping."
     else
         echo "Install markdown ide..."
         sudo snap install typora-alanzanattadev
-    fi
-}
-
-install_flyenv() {
-    # FlyEnv (https://github.com/xpf0000/FlyEnv)
-    if dpkg -s flyenv >/dev/null 2>&1; then
-        echo "FlyEnv already installed, skipping."
-    else
-        echo "Install FlyEnv..."
-        case "$(dpkg --print-architecture)" in
-            amd64) flyenv_arch="x64" ;;
-            arm64) flyenv_arch="arm64" ;;
-        esac
-        set +o pipefail
-        flyenv_deb_url=$(curl -fsSL https://api.github.com/repos/xpf0000/FlyEnv/releases/latest | grep -m1 -oE "https://github\.com/xpf0000/FlyEnv/releases/download/[^\"]*FlyEnv-[0-9.]+-${flyenv_arch}\.deb")
-        set -o pipefail
-        curl -fsSL -o /tmp/flyenv.deb "$flyenv_deb_url"
-        sudo dpkg -i /tmp/flyenv.deb || sudo apt-get install -f -y
-        rm -f /tmp/flyenv.deb
     fi
 }
 
@@ -174,11 +135,14 @@ sudo apt-get update
 
 run_remote https://raw.githubusercontent.com/mahbubzulkarnain/setup/master/git.sh
 run_remote https://raw.githubusercontent.com/mahbubzulkarnain/setup/master/gh.sh
-run_remote https://raw.githubusercontent.com/mahbubzulkarnain/setup/master/zsh.sh
+run_remote https://raw.githubusercontent.com/mahbubzulkarnain/setup/master/nushell.sh
 run_remote https://raw.githubusercontent.com/mahbubzulkarnain/setup/master/cli.sh
-run_remote https://raw.githubusercontent.com/mahbubzulkarnain/setup/master/npm.sh
+run_remote https://raw.githubusercontent.com/mahbubzulkarnain/setup/master/starship.sh
+run_remote https://raw.githubusercontent.com/mahbubzulkarnain/setup/master/mise.sh
 run_remote https://raw.githubusercontent.com/mahbubzulkarnain/setup/master/java.sh
 run_remote https://raw.githubusercontent.com/mahbubzulkarnain/setup/master/ai.sh
+run_remote https://raw.githubusercontent.com/mahbubzulkarnain/setup/master/plaesy.sh
+run_remote https://raw.githubusercontent.com/mahbubzulkarnain/setup/master/claude.sh
 
 if [ -f /etc/os-release ]; then
     . /etc/os-release
@@ -187,9 +151,8 @@ if [ -f /etc/os-release ]; then
             echo "Distro: $ID"
             sudo apt-get upgrade -y
             install_vscode
-            install_flutter_fvm
+            run_remote https://raw.githubusercontent.com/mahbubzulkarnain/setup/master/flutter.sh
             install_typora
-            install_flyenv
             run_remote https://raw.githubusercontent.com/mahbubzulkarnain/setup/master/docker.sh
             install_ngrok
             install_chrome
@@ -205,7 +168,6 @@ if [ -f /etc/os-release ]; then
             sudo apt-get upgrade -y
             install_kali_tools
             install_vscode
-            install_flyenv
             ;;
         arch)
             echo "Distro Arch belum didukung otomatis, skip package-manager-specific steps."

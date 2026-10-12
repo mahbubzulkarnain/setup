@@ -20,10 +20,3 @@ else
     echo "Install java..."
     brew install jenv
 fi
-
-if brew list nvm &>/dev/null; then
-    echo "nvm already installed, skipping."
-else
-    echo "Install NVM..."
-    brew install nvm
-fi

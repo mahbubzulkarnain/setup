@@ -12,32 +12,6 @@ run_remote() {
     rm -f "$tmp"
 }
 
-install_exe_from_release_zip() {
-    local repo="$1" asset_regex="$2" bin_name="$3"
-
-    if command -v "$bin_name" &>/dev/null; then
-        echo "$bin_name already installed, skipping."
-        return
-    fi
-
-    echo "Install $bin_name..."
-    set +o pipefail
-    local asset_url
-    asset_url=$(curl -fsSL "https://api.github.com/repos/$repo/releases/latest" | grep -m1 -oE "https://github\.com/$repo/releases/download/[^\"]*${asset_regex}")
-    set -o pipefail
-
-    local tmp_zip tmp_dir
-    tmp_zip=$(mktemp)
-    tmp_dir=$(mktemp -d)
-    curl -fsSL -o "$tmp_zip" "$asset_url"
-    unzip -q -o "$tmp_zip" -d "$tmp_dir"
-
-    local exe_path
-    exe_path=$(find "$tmp_dir" -iname "${bin_name}.exe" | head -1)
-    install -m 755 "$exe_path" "/usr/bin/${bin_name}.exe"
-    rm -rf "$tmp_zip" "$tmp_dir"
-}
-
 install_lazygit_from_release() {
     local os_name="$1" arch_name="$2" archive_ext="$3" bin_name="$4" install_dir="$5"
 
@@ -107,29 +81,6 @@ elif [[ "$OSTYPE" == "linux-gnu"* ]]; then
         *) lazygit_arch="$(dpkg --print-architecture)" ;;
     esac
     install_lazygit_from_release Linux "$lazygit_arch" tar.gz lazygit /usr/local/bin
-
-elif [[ -n "${MSYSTEM:-}" ]]; then
-    if pacman -Qi base-devel &>/dev/null; then
-        echo "base-devel (make, gcc, ...) already installed, skipping."
-    else
-        echo "Install base-devel..."
-        pacman -Sy --noconfirm base-devel
-    fi
-
-    if pacman -Qi unzip &>/dev/null; then
-        echo "unzip already installed, skipping."
-    else
-        echo "Install unzip..."
-        pacman -Sy --noconfirm unzip
-    fi
-
-    # ripgrep/fd/bat aren't in the base "msys" pacman repo (only under
-    # mingw-w64-* subsystems that aren't on PATH here), so grab the
-    # official prebuilt Windows binaries instead, same as lazygit below.
-    install_exe_from_release_zip BurntSushi/ripgrep 'ripgrep-[^"]*-x86_64-pc-windows-msvc\.zip' rg
-    install_exe_from_release_zip sharkdp/fd 'fd-[^"]*-x86_64-pc-windows-msvc\.zip' fd
-    install_exe_from_release_zip sharkdp/bat 'bat-[^"]*-x86_64-pc-windows-msvc\.zip' bat
-    install_lazygit_from_release Windows x86_64 zip lazygit.exe /usr/bin
 
 else
     echo "Unsupported/unrecognized OS (OSTYPE=$OSTYPE). Please install manually or add support for it." >&2

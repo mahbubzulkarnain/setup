@@ -1,61 +1,27 @@
-# GitHub CLI installation for Windows (PowerShell)
+# Windows bootstrap: installs Nushell, then runs windows.nu (which installs everything else)
 # Usage: powershell -ExecutionPolicy Bypass -Command "iex (irm https://raw.githubusercontent.com/mahbubzulkarnain/setup/master/install.ps1)"
 
-function Test-Command {
-    param([string]$Command)
-    try { Get-Command $Command -ErrorAction Stop | Out-Null; return $true } catch { return $false }
+$RAW = 'https://raw.githubusercontent.com/mahbubzulkarnain/setup/master'
+
+function Update-SessionPath {
+    $env:Path = [Environment]::GetEnvironmentVariable('Path', 'Machine') + ';' + [Environment]::GetEnvironmentVariable('Path', 'User')
 }
 
-function Install-GH {
-    if (Test-Command "gh") {
-        Write-Host "gh already installed, skipping." -ForegroundColor Green
-        return
-    }
-
-    Write-Host "Installing GitHub CLI for Windows..."
-
-    # Try scoop first
-    if (Test-Command "scoop") {
-        Write-Host "Installing via scoop..."
-        scoop install gh
-        return
-    }
-
-    # Try choco second
-    if (Test-Command "choco") {
-        Write-Host "Installing via chocolatey..."
-        & choco install gh -y --force 2>$null
-        if ($LASTEXITCODE -eq 0) { return }
-        Write-Host "Chocolatey installation failed (may require admin), trying next method..." -ForegroundColor Yellow
-    }
-
-    # Try winget third
-    if (Test-Command "winget") {
-        Write-Host "Installing via winget..."
-        winget install --id GitHub.cli --source winget
-        return
-    }
-
-    # Fallback: direct PowerShell installer
-    Write-Host "Using official PowerShell installer..."
-    try {
-        irm https://cli.github.com/install.ps1 | iex
-    } catch {
-        Write-Host "Error: Could not install gh. Please try one of:" -ForegroundColor Red
-        Write-Host "  winget install GitHub.cli"
-        Write-Host "  choco install gh"
-        Write-Host "  scoop install gh"
-        Write-Host "  irm https://cli.github.com/install.ps1 | iex"
-        exit 1
-    }
+if (-not (Get-Command winget -ErrorAction SilentlyContinue)) {
+    Write-Host "winget not found. Install 'App Installer' from the Microsoft Store, then re-run." -ForegroundColor Red
+    return
 }
 
-Write-Host "GitHub CLI Installation Script for Windows" -ForegroundColor Cyan
-Write-Host "==========================================" -ForegroundColor Cyan
-Write-Host ""
+if (Get-Command nu -ErrorAction SilentlyContinue) {
+    Write-Host "Nushell already installed, skipping." -ForegroundColor Green
+} else {
+    Write-Host "Install Nushell..." -ForegroundColor Cyan
+    winget install --id Nushell.Nushell --exact --silent --accept-package-agreements --accept-source-agreements
+    Update-SessionPath
+}
 
-Install-GH
+$nuScript = Join-Path $env:TEMP 'windows.nu'
+Invoke-RestMethod "$RAW/windows.nu" -OutFile $nuScript
 
-Write-Host ""
-Write-Host "GitHub CLI installed successfully!" -ForegroundColor Green
-gh --version
+& nu $nuScript
+Remove-Item $nuScript -ErrorAction SilentlyContinue

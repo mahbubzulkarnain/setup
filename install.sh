@@ -14,7 +14,8 @@ if [[ "$OSTYPE" == "linux-gnu"* ]]; then
 elif [[ "$OSTYPE" == "darwin"* ]]; then
     run_remote https://raw.githubusercontent.com/mahbubzulkarnain/setup/master/mac.sh
 elif [[ -n "${MSYSTEM:-}" ]]; then
-    run_remote https://raw.githubusercontent.com/mahbubzulkarnain/setup/master/windows.sh
+    # Windows (Git Bash): install.ps1 bootstraps Nushell and runs windows.nu, the one Windows setup
+    powershell.exe -NoProfile -ExecutionPolicy Bypass -Command "iex (irm https://raw.githubusercontent.com/mahbubzulkarnain/setup/master/install.ps1)"
 else
     echo "Unsupported/unrecognized OS (OSTYPE=$OSTYPE). Please install manually or add support for it." >&2
     exit 1
