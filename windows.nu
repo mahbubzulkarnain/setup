@@ -113,9 +113,9 @@ def vimrc [dry: bool] {
     }
 }
 
-# plaesy spec-kit: pinned release binary, checked against its SHA-256 (same values as plaesy.sh)
+# plaesy spec-kit: release binary verified against the release's SHA256SUMS (same logic as plaesy.sh).
+# The version is fixed while the project is in development; the checksum is read on every install.
 const PLAESY_VERSION = "v0.0.1"
-const PLAESY_SHA256 = "c1143a00dac0739a127ec86d109406d5c8ea7f1251de5cb69dd31f60cd3af558"
 
 def plaesy-install [dry: bool] {
     let plaesy_dir = ($env.LOCALAPPDATA | path join "Plaesy" "bin")
@@ -128,14 +128,21 @@ def plaesy-install [dry: bool] {
     print $"Install plaesy spec-kit ($PLAESY_VERSION)..."
     if $dry { return }
 
+    let base = $"https://github.com/plaesy/spec-kit/releases/download/($PLAESY_VERSION)"
+    let asset = "plaesy-windows-amd64.exe"
+    let sums = (http get $"($base)/SHA256SUMS" | decode utf-8)
+    let expected = ($sums | lines | each {|l| $l | str trim | split row -r '\s+' } | where {|p| ($p | length) >= 2 and ($p | get 1) == $asset } | each {|p| $p | first } | first)
+    if ($expected | is-empty) {
+        error make { msg: $"No checksum for ($asset) in SHA256SUMS. Setup stopped." }
+    }
+
     let tmp = ($env.TEMP | path join "plaesy-download.exe")
-    let url = $"https://github.com/plaesy/spec-kit/releases/download/($PLAESY_VERSION)/plaesy-windows-amd64.exe"
-    ^curl.exe -fsSL -o $tmp $url
+    ^curl.exe -fsSL -o $tmp $"($base)/($asset)"
 
     let actual = (open --raw $tmp | hash sha256)
-    if $actual != $PLAESY_SHA256 {
+    if $actual != $expected {
         rm -f $tmp
-        error make { msg: $"plaesy checksum mismatch: expected ($PLAESY_SHA256), got ($actual). Setup stopped." }
+        error make { msg: $"plaesy checksum mismatch: SHA256SUMS says ($expected), got ($actual). Setup stopped." }
     }
 
     mkdir $plaesy_dir
