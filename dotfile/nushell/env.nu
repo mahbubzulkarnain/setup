@@ -26,6 +26,7 @@ let extra_paths = if $os == "macos" {
     [
         ($home | path join "fvm" "default" "bin")
         ($home | path join ".local" "bin")
+        ($home | path join "bin")
         ($env.LOCALAPPDATA | path join "Pub" "Cache" "bin")
         ($env.LOCALAPPDATA | path join "Microsoft" "WinGet" "Links")
         ($env.LOCALAPPDATA | path join "Plaesy" "bin")

@@ -268,31 +268,42 @@ def android-sdk [dry: bool] {
     ^fvm flutter config --android-sdk $sdk
 }
 
-# Visual Studio Build Tools 2022 with the C++ workload (MSVC). No IDE; needed for Flutter Windows desktop and node-gyp.
-# Installing needs admin, so this asks for one UAC prompt.
-def vs-build-tools [dry: bool] {
+# Visual Studio Build Tools 2022: C++ workload (MSVC) and C++ ATL for latest v143 build tools. No IDE; needed for
+# Flutter Windows desktop and node-gyp. Installing needs admin, so this asks for one UAC prompt.
+const VS_CPP = "Microsoft.VisualStudio.Component.VC.Tools.x86.x64"
+const VS_ATL = "Microsoft.VisualStudio.Component.VC.ATL"
+
+# Install path of the Visual Studio instance that has the component, or "" when none does
+def vs-find [component: string] {
     let vswhere = ($env."ProgramFiles(x86)" | path join "Microsoft Visual Studio" "Installer" "vswhere.exe")
-    let has_vc = if ($vswhere | path exists) {
-        (^$vswhere -products '*' -requires Microsoft.VisualStudio.Component.VC.Tools.x86.x64 -latest -property installationPath | str trim | is-not-empty)
-    } else { false }
-    if $has_vc {
-        print "Visual Studio Build Tools (C++) already installed, skipping."
+    if not ($vswhere | path exists) { return "" }
+    ^$vswhere -products '*' -requires $component -latest -property installationPath | str trim
+}
+
+def vs-build-tools [dry: bool] {
+    let vs_path = (vs-find $VS_CPP)
+    if ($vs_path | is-not-empty) and ((vs-find $VS_ATL) | is-not-empty) {
+        print "Visual Studio Build Tools (C++ and ATL) already installed, skipping."
         return
     }
 
-    print "Install Visual Studio Build Tools (C++ workload, one admin prompt)..."
-    if $dry { return }
-
     let script = ($env.TEMP | path join "vs-build-tools.ps1")
-    r#'winget install --id Microsoft.VisualStudio.2022.BuildTools --exact --silent --accept-package-agreements --accept-source-agreements --override "--quiet --wait --norestart --add Microsoft.VisualStudio.Workload.VCTools --includeRecommended"
+    if ($vs_path | is-not-empty) {
+        # Build Tools is already installed without ATL, so add ATL to that instance
+        print "Add C++ ATL for latest v143 build tools to Visual Studio Build Tools (one admin prompt)..."
+        if $dry { return }
+        let setup = ($env."ProgramFiles(x86)" | path join "Microsoft Visual Studio" "Installer" "setup.exe")
+        $"& '($setup)' modify --installPath '($vs_path)' --add ($VS_ATL) --quiet --norestart\n" | save -f $script
+    } else {
+        print "Install Visual Studio Build Tools (C++ workload and ATL, one admin prompt)..."
+        if $dry { return }
+        r#'winget install --id Microsoft.VisualStudio.2022.BuildTools --exact --silent --accept-package-agreements --accept-source-agreements --override "--quiet --wait --norestart --add Microsoft.VisualStudio.Workload.VCTools --add Microsoft.VisualStudio.Component.VC.ATL --includeRecommended"
 '#  | save -f $script
+    }
     ^powershell -NoProfile -Command ("Start-Process powershell -Verb RunAs -Wait -ArgumentList '-NoProfile -ExecutionPolicy Bypass -File " + $script + "'")
 
-    let installed = if ($vswhere | path exists) {
-        (^$vswhere -products '*' -requires Microsoft.VisualStudio.Component.VC.Tools.x86.x64 -latest -property installationPath | str trim | is-not-empty)
-    } else { false }
-    if not $installed {
-        print -e "Warning: Visual Studio Build Tools (C++) not detected. Run the install again or check the Visual Studio Installer."
+    if ((vs-find $VS_CPP | is-empty) or (vs-find $VS_ATL | is-empty)) {
+        print -e "Warning: Visual Studio Build Tools (C++ and ATL) not fully detected. Run the setup again or check the Visual Studio Installer."
     }
 }
 
