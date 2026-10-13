@@ -81,6 +81,7 @@ run_remote https://raw.githubusercontent.com/mahbubzulkarnain/setup/master/claud
 echo "Installing Development Tools..."
 install_cask visual-studio-code
 install_cask bruno
+install_cask typora
 # install_cask dbeaver-community
 # brew cask install altair-graphql-client
 install_formula awscli

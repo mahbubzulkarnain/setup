@@ -21,6 +21,18 @@ const PACKAGES = [
     { id: "junegunn.fzf", cmd: "fzf" }
     { id: "ezwinports.make", cmd: "make" }
     { id: "vim.vim", cmd: "vim" }
+    # Apps (same set as mac.sh and linux.sh)
+    { id: "Microsoft.VisualStudioCode", cmd: "code" }
+    { id: "Google.Chrome", cmd: "" }
+    { id: "Bruno.Bruno", cmd: "" }
+    { id: "Docker.DockerDesktop", cmd: "" }
+    { id: "Ngrok.Ngrok", cmd: "ngrok" }
+    { id: "TorProject.TorBrowser", cmd: "" }
+    { id: "Spotify.Spotify", cmd: "" }
+    { id: "WhatsApp.WhatsApp", cmd: "" }
+    { id: "Amazon.AWSCLI", cmd: "aws" }
+    { id: "Kubernetes.kubectl", cmd: "kubectl" }
+    { id: "Typora.Typora", cmd: "" }
 ]
 
 # Config file from this repo when run inside it, otherwise from GitHub master
@@ -37,17 +49,24 @@ def --env refresh-path [] {
 }
 
 def --env winget-install [pkg: record, dry: bool] {
-    if (which $pkg.cmd | is-not-empty) {
-        print $"($pkg.cmd) already installed, skipping."
+    # GUI apps often have no command on PATH, so ask winget whether the package is installed
+    let installed = if ($pkg.cmd | is-empty) {
+        (^winget list --id $pkg.id --exact --accept-source-agreements | complete | get exit_code) == 0
+    } else {
+        (which $pkg.cmd | is-not-empty)
+    }
+    if $installed {
+        print $"($pkg.id) already installed, skipping."
         return
     }
 
     print $"Install ($pkg.id)..."
     if $dry { return }
 
-    ^winget install --id $pkg.id --exact --silent --accept-package-agreements --accept-source-agreements
-    if $env.LAST_EXIT_CODE != 0 {
-        print -e $"Warning: winget exited with ($env.LAST_EXIT_CODE) for ($pkg.id)"
+    # complete: one failed app must not stop the rest of the setup. It is reported and can be re-run.
+    let result = (^winget install --id $pkg.id --exact --silent --accept-package-agreements --accept-source-agreements | complete)
+    if $result.exit_code != 0 {
+        print -e $"Warning: winget failed for ($pkg.id) (exit ($result.exit_code)). Re-run setup to retry."
     }
     refresh-path
 }
@@ -382,7 +401,7 @@ def main [--dry-run] {
     claude-install $dry
     enable-developer-mode $dry
     flutter-setup $dry
-    ensure-user-path [($env.USERPROFILE | path join "fvm" "default" "bin") ($env.LOCALAPPDATA | path join "Pub" "Cache" "bin")] $dry
+    ensure-user-path [($env.USERPROFILE | path join "fvm" "default" "bin") ($env.LOCALAPPDATA | path join "Pub" "Cache" "bin") ($env.LOCALAPPDATA | path join "Plaesy" "bin")] $dry
     android-sdk $dry
     vs-build-tools $dry
     nu-config $dry
