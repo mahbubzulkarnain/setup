@@ -12,6 +12,7 @@ fi
 LOCAL_APP="$(cygpath -u "$LOCALAPPDATA")"
 addpath "$HOME/fvm/default/bin"
 addpath "$HOME/.local/bin"
+addpath "$HOME/bin"
 addpath "$LOCAL_APP/Pub/Cache/bin"
 addpath "$LOCAL_APP/Microsoft/WinGet/Links"
 addpath "$LOCAL_APP/Plaesy/bin"
