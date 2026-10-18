@@ -12,6 +12,9 @@ $custom\
 $line_break\
 $character"""
 
+# git_clean runs git in every directory, so allow more than the default 500ms
+command_timeout = 2000
+
 [username]
 show_always = true
 style_user = "bold cyan"
