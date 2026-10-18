@@ -46,10 +46,8 @@ PACKAGES=(
     "Ngrok.Ngrok ngrok"
     "TorProject.TorBrowser -"
     "Spotify.Spotify -"
-    "WhatsApp.WhatsApp -"
     "Amazon.AWSCLI aws"
     "Kubernetes.kubectl kubectl"
-    "Typora.Typora -"
 )
 
 say() { printf '%s\n' "$*"; }
