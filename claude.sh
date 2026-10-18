@@ -2,7 +2,7 @@
 set -euo pipefail
 
 # Claude Code (https://code.claude.com) with Anthropic's native installer (the recommended method).
-# It installs to ~/.local/bin/claude and updates itself. Windows: windows.nu runs the matching install.ps1.
+# It installs to ~/.local/bin/claude and updates itself. Windows: windows.sh runs the matching install.ps1.
 
 export PATH="$HOME/.local/bin:$PATH"
 

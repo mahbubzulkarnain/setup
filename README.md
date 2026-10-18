@@ -22,11 +22,15 @@ bash <(curl -fsSL https://raw.githubusercontent.com/mahbubzulkarnain/setup/maste
 bash <(curl -fsSL https://raw.githubusercontent.com/mahbubzulkarnain/setup/master/mac.sh)
 ```
 
-###### Windows (Nushell)
+###### Windows (Git Bash)
 
-```nu
-http get https://raw.githubusercontent.com/mahbubzulkarnain/setup/master/windows.nu | save -f windows.nu; nu windows.nu
+The PowerShell command above installs Git for Windows, then runs `windows.sh` in Git Bash. To run it from an existing Git Bash:
+
+```bash
+bash <(curl -fsSL https://raw.githubusercontent.com/mahbubzulkarnain/setup/master/windows.sh)
 ```
+
+Preview without changes: `bash windows.sh --dry-run` (from a clone of this repo).
 
 ###### Claude Code
 
@@ -70,10 +74,12 @@ bash <(curl -fsSL https://raw.githubusercontent.com/mahbubzulkarnain/setup/maste
 bash <(curl -fsSL https://raw.githubusercontent.com/mahbubzulkarnain/setup/master/vim.sh)
 ```
 
-###### Nushell
+###### Bash config (macOS and Linux)
+
+Included in the Mac and Linux setups. Run on its own after `mise.sh`:
 
 ```bash
-bash <(curl -fsSL https://raw.githubusercontent.com/mahbubzulkarnain/setup/master/nushell.sh)
+bash <(curl -fsSL https://raw.githubusercontent.com/mahbubzulkarnain/setup/master/bash.sh)
 ```
 
 [More setup...](https://github.com/mahbubzulkarnain?tab=repositories&q=setup)

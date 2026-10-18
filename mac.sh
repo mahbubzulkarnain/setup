@@ -57,11 +57,11 @@ run_remote https://raw.githubusercontent.com/mahbubzulkarnain/setup/master/gh.sh
 echo "Install iterm..."
 # brew cask install iterm2
 
-run_remote https://raw.githubusercontent.com/mahbubzulkarnain/setup/master/nushell.sh
 run_remote https://raw.githubusercontent.com/mahbubzulkarnain/setup/master/cli.sh
 
 run_remote https://raw.githubusercontent.com/mahbubzulkarnain/setup/master/starship.sh
 run_remote https://raw.githubusercontent.com/mahbubzulkarnain/setup/master/mise.sh
+run_remote https://raw.githubusercontent.com/mahbubzulkarnain/setup/master/bash.sh
 run_remote https://raw.githubusercontent.com/mahbubzulkarnain/setup/master/flutter.sh
 run_remote https://raw.githubusercontent.com/mahbubzulkarnain/setup/master/ai.sh
 run_remote https://raw.githubusercontent.com/mahbubzulkarnain/setup/master/plaesy.sh

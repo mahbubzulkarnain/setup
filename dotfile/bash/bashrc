@@ -1,0 +1,27 @@
+# shellcheck shell=bash
+# ~/.bashrc: managed by the setup repo (dotfile/bash/bashrc). Put machine-only settings in ~/.bashrc.local.
+# Interactive shells only.
+[[ $- != *i* ]] && return
+
+CFG="$HOME/.config/bash"
+
+# Add a directory to PATH once, and only when it exists
+addpath() {
+    [ -d "$1" ] || return 0
+    case ":$PATH:" in
+        *":$1:"*) ;;
+        *) PATH="$1:$PATH" ;;
+    esac
+}
+
+case "$(uname -s)" in
+    MINGW*|MSYS*) OS_FILE=os-windows.sh ;;
+    Darwin)       OS_FILE=os-macos.sh ;;
+    Linux)        OS_FILE=os-linux.sh ;;
+    *)            OS_FILE="" ;;
+esac
+
+# shellcheck source=/dev/null
+[ -n "$OS_FILE" ] && [ -f "$CFG/$OS_FILE" ] && . "$CFG/$OS_FILE"
+[ -f "$CFG/common.sh" ] && . "$CFG/common.sh"
+[ -f "$HOME/.bashrc.local" ] && . "$HOME/.bashrc.local"
