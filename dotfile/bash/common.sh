@@ -10,6 +10,14 @@ have zoxide && eval "$(zoxide init bash)"    # z and zi
 have mise && eval "$(mise activate bash)"
 have fzf && eval "$(fzf --bash)"             # Ctrl+R history, Ctrl+T files, Alt+C folders
 
+# History. Each command is written to ~/.bash_history as soon as it runs (history -a),
+# so a window closed without a clean exit keeps it. histappend stops terminals from overwriting each other.
+HISTSIZE=10000
+HISTFILESIZE=20000
+HISTCONTROL=ignoreboth                       # skip duplicates and commands that start with a space
+shopt -s histappend
+PROMPT_COMMAND="history -a${PROMPT_COMMAND:+; $PROMPT_COMMAND}"
+
 # Git (same aliases as the old Nushell config)
 alias gis='git status'
 alias gic='git checkout'
