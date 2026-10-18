@@ -3,7 +3,7 @@ set -euo pipefail
 
 # mise (https://mise.jdx.dev) installs everything in dotfile/mise/config.toml:
 # Node.js LTS, Go, Python, and the global npm/Go CLIs. Replaces nvm, gvm, and the per-OS installs.
-# Windows is handled by windows.nu (same config file).
+# Windows is handled by windows.sh (same config file).
 
 RAW=https://raw.githubusercontent.com/mahbubzulkarnain/setup/master
 

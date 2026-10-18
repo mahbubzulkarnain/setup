@@ -1,7 +1,8 @@
-# Windows bootstrap: installs Nushell, then runs windows.nu (which installs everything else)
+# Windows bootstrap: installs Git for Windows (which provides Git Bash), then runs windows.sh in Git Bash
 # Usage: powershell -ExecutionPolicy Bypass -Command "iex (irm https://raw.githubusercontent.com/mahbubzulkarnain/setup/master/install.ps1)"
 
 $RAW = 'https://raw.githubusercontent.com/mahbubzulkarnain/setup/master'
+$GitBash = Join-Path $env:ProgramFiles 'Git\bin\bash.exe'
 
 function Update-SessionPath {
     $env:Path = [Environment]::GetEnvironmentVariable('Path', 'Machine') + ';' + [Environment]::GetEnvironmentVariable('Path', 'User')
@@ -12,16 +13,22 @@ if (-not (Get-Command winget -ErrorAction SilentlyContinue)) {
     return
 }
 
-if (Get-Command nu -ErrorAction SilentlyContinue) {
-    Write-Host "Nushell already installed, skipping." -ForegroundColor Green
+if (Test-Path $GitBash) {
+    Write-Host "Git for Windows already installed, skipping." -ForegroundColor Green
 } else {
-    Write-Host "Install Nushell..." -ForegroundColor Cyan
-    winget install --id Nushell.Nushell --exact --silent --accept-package-agreements --accept-source-agreements
+    Write-Host "Install Git for Windows (Git Bash)..." -ForegroundColor Cyan
+    winget install --id Git.Git --exact --silent --accept-package-agreements --accept-source-agreements
     Update-SessionPath
 }
 
-$nuScript = Join-Path $env:TEMP 'windows.nu'
-Invoke-RestMethod "$RAW/windows.nu" -OutFile $nuScript
+if (-not (Test-Path $GitBash)) {
+    Write-Host "Git Bash not found at $GitBash. Install Git for Windows, then re-run." -ForegroundColor Red
+    return
+}
 
-& nu $nuScript
-Remove-Item $nuScript -ErrorAction SilentlyContinue
+# Git Bash takes forward slashes most reliably
+$script = Join-Path $env:TEMP 'windows.sh'
+Invoke-RestMethod "$RAW/windows.sh" -OutFile $script
+
+& $GitBash ($script -replace '\\', '/')
+Remove-Item $script -ErrorAction SilentlyContinue

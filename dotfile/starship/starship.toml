@@ -1,13 +1,15 @@
 # Starship prompt (https://starship.rs/config/)
 # Replaces the old oh-my-zsh "zul" theme. Same two-line layout:
-#   user in ~/path on git:branch ✗
+#   user in ~/path on git:branch ✗ or ✓
 #   ›
 
 format = """
 $username\
 $directory\
 $git_branch\
-$git_status
+$git_status\
+$custom\
+$line_break\
 $character"""
 
 [username]
@@ -27,9 +29,31 @@ symbol = "git:"
 style = "cyan"
 format = "on [$symbol$branch]($style) "
 
+# Shows ✗ when the working tree has changes (tracked or untracked).
+# Empty format variables keep the module silent when the tree is clean.
 [git_status]
 style = "red"
-format = "[✗]($style) "
+format = "[$all_status]($style)"
+ahead = ""
+behind = ""
+diverged = ""
+up_to_date = ""
+stashed = ""
+conflicted = "✗"
+modified = "✗"
+staged = "✗"
+untracked = "✗"
+deleted = "✗"
+renamed = "✗"
+typechanged = "✗"
+
+# Shows ✓ only when the working tree is clean (no tracked changes, no untracked files).
+[custom.git_clean]
+when = "git rev-parse --is-inside-work-tree && git diff-index --quiet HEAD -- && [ -z \"$(git ls-files --others --exclude-standard)\" ]"
+shell = ["sh"]
+command = "echo ok"
+format = "[✓]($style) "
+style = "bold green"
 
 [character]
 success_symbol = "[›](bold white)"

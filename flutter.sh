@@ -2,7 +2,7 @@
 set -euo pipefail
 
 # Flutter stable through FVM (installed by mise.sh), plus the Android SDK without Android Studio.
-# Windows: windows.nu does the same steps. Project Flutter versions are pinned per project with `fvm use`.
+# Windows: windows.sh does the same steps. Project Flutter versions are pinned per project with `fvm use`.
 
 ANDROID_CMDLINE_REVISION=16111833
 ANDROID_PACKAGES=("platform-tools" "platforms/android-36" "build-tools/36.1.0")

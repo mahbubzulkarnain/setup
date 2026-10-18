@@ -1,4 +1,4 @@
-# Global mise config (copied to ~/.config/mise/config.toml by mise.sh and windows.nu, then `mise install`).
+# Global mise config (copied to ~/.config/mise/config.toml by mise.sh and windows.sh, then `mise install`).
 # Versions are pinned to the latest stable release, so all laptops get the same versions,
 # except Kilo CLI, which follows "latest" (setup runs `mise upgrade` for it). Claude Code updates itself.
 # To upgrade a pinned tool: bump the version here, run `mise install` on each machine, and commit.

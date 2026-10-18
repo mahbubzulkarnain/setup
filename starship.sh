@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-# Starship prompt (https://starship.rs) for Nushell on macOS and Linux. Windows: windows.nu.
+# Starship prompt (https://starship.rs) for bash on macOS, Linux, and Windows (Git Bash). Config: dotfile/bash/bashrc.
 # Config lives in dotfile/starship/starship.toml and is copied to ~/.config/starship.toml.
 
 export PATH="$HOME/.local/bin:$PATH"
