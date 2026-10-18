@@ -72,6 +72,19 @@ fetch() {
     fi
 }
 
+# dart pub global activate makes fvm.bat, which Git Bash can't run by name. cmd runs it.
+fvm() {
+    # fvm.bat runs dart, which mise provides. Put dart on the PATH cmd sees, then call fvm.bat
+    # fvm also runs git, which lives in Program Files (a space, so use the short path)
+    local dart_win fvm_win git_win win_path
+    dart_win="$(cygpath -w "$(mise where dart | tr -d '\r')")\\bin"
+    fvm_win="$(cygpath -w "$PUB_BIN")\\fvm.bat"
+    git_win="$(cygpath -d "$(cygpath -u "$PROGRAMFILES")/Git/cmd")"
+    # Git Bash's PATH has Unix paths cmd can't read (PowerShell, where.exe), so give cmd the Windows PATH
+    win_path="$(winps "[Environment]::ExpandEnvironmentVariables([Environment]::GetEnvironmentVariable('Path','Machine')+';'+[Environment]::GetEnvironmentVariable('Path','User'))")"
+    PATH="$win_path" "$(cygpath -u "$SYSTEMROOT")/System32/cmd.exe" //c "set PATH=$dart_win;$git_win;%PATH% && $fvm_win $*"
+}
+
 # Reload PATH from the registry so tools installed earlier in this run are found
 refresh_path() {
     local machine user
@@ -301,7 +314,11 @@ android_sdk() {
     fi
     # Accept every license prompt (60 "y" answers). The pipe can get SIGPIPE once android exits, which
     # pipefail would treat as a failure; a real failure shows up in the flutter config step below.
-    printf 'y\n%.0s' {1..60} | "$android" "--sdk=$sdk_win" sdk install "${ANDROID_PACKAGES[@]}" || true
+    # android.exe looks up git and where.exe on PATH, so give it the Windows PATH, not Git Bash's
+    local win_path
+    # The registry PATH holds %SystemRoot% unexpanded, so expand it, and put System32 first for where.exe
+    win_path="$(winps "\"\$env:SystemRoot\\System32;\$env:SystemRoot;\" + [Environment]::ExpandEnvironmentVariables([Environment]::GetEnvironmentVariable('Path','Machine')+';'+[Environment]::GetEnvironmentVariable('Path','User'))")"
+    printf 'y\n%.0s' {1..60} | PATH="$win_path" "$android" "--sdk=$sdk_win" sdk install "${ANDROID_PACKAGES[@]}" || true
     fvm flutter config --android-sdk "$sdk_win"
 }
 
