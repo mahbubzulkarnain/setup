@@ -17,7 +17,7 @@ command_timeout = 2000
 
 [username]
 show_always = true
-style_user = "bold cyan"
+style_user = "bold green"
 style_root = "bold red"
 format = "[$user]($style) "
 
@@ -62,7 +62,7 @@ style = "bold green"
 [custom.git_last_commit]
 when = "git rev-parse --is-inside-work-tree >/dev/null 2>&1"
 shell = ["sh"]
-command = "git log -1 --format='%h %s' | cut -c1-60"
+command = "git log -1 --format='%h:%s' | cut -c1-60"
 format = "[$output]($style) "
 style = "bright-black"
 
