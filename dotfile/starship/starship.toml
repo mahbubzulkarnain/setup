@@ -58,6 +58,14 @@ command = "echo ok"
 format = "[✓]($style) "
 style = "bold green"
 
+# Latest commit in the current repo: short hash and subject, dimmed. Silent outside a repo.
+[custom.git_last_commit]
+when = "git rev-parse --is-inside-work-tree >/dev/null 2>&1"
+shell = ["sh"]
+command = "git log -1 --format='%h %s' | cut -c1-60"
+format = "[$output]($style) "
+style = "bright-black"
+
 [character]
 success_symbol = "[›](bold white)"
 error_symbol = "[›](red)"
