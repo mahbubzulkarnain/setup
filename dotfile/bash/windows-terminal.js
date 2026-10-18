@@ -47,7 +47,16 @@ if (themeFile) {
         .map((line, i) => (i === 0 ? line : `        ${line}`))
         .join('\n');
 
-    if (!text.includes(`"name": "${theme.name}"`)) {
+    const nameAt = text.indexOf(`"name": "${theme.name}"`);
+    if (nameAt !== -1) {
+        // Replace the existing scheme so a changed palette takes effect. A scheme has no nested braces.
+        const start = text.lastIndexOf('{', nameAt);
+        const end = text.indexOf('}', start) + 1;
+        if (text.slice(start, end) !== scheme) {
+            text = text.slice(0, start) + scheme + text.slice(end);
+            changed = true;
+        }
+    } else {
         const emptySchemes = /"schemes":\s*\[\s*\]/.test(text);
         text = text.replace(/"schemes":\s*\[/, `"schemes": [\n        ${scheme}${emptySchemes ? '' : ','}`);
         changed = true;
