@@ -1,0 +1,23 @@
+{
+    "name": "Setup Dark",
+    "background": "#262729",
+    "foreground": "#D7D7D7",
+    "cursor": "#E6E6E6",
+    "selectionBackground": "#3B3D41",
+    "black": "#1B1C1E",
+    "red": "#E06C75",
+    "green": "#98C379",
+    "yellow": "#E5C07B",
+    "blue": "#61AFEF",
+    "purple": "#C678DD",
+    "cyan": "#56B6C2",
+    "white": "#ABB2BF",
+    "brightBlack": "#5C6370",
+    "brightRed": "#FF7A85",
+    "brightGreen": "#B5E08A",
+    "brightYellow": "#F0D28A",
+    "brightBlue": "#74C0FF",
+    "brightPurple": "#DA8BF0",
+    "brightCyan": "#6FD0DC",
+    "brightWhite": "#FFFFFF"
+}

@@ -75,9 +75,11 @@ install_config() {
 }
 
 set_vscode_terminal() {
-    local settings os_key bash_path script
+    local settings os_key bash_path script theme
     script=$(mktemp)
+    theme=$(mktemp)
     curl -fsSL "$RAW/dotfile/bash/vscode-terminal.js" -o "$script"
+    curl -fsSL "$RAW/dotfile/terminal/theme.json" -o "$theme"
 
     if [[ "$OSTYPE" == "darwin"* ]]; then
         settings="$HOME/Library/Application Support/Code/User/settings.json"
@@ -91,8 +93,8 @@ set_vscode_terminal() {
     fi
 
     echo "Set bash as the VS Code terminal and apply best-practice settings..."
-    mise exec -- node "$script" "$settings" "$os_key" "$bash_path"
-    rm -f "$script"
+    mise exec -- node "$script" "$settings" "$os_key" "$bash_path" "$theme"
+    rm -f "$script" "$theme"
 }
 
 echo "Install bash config..."

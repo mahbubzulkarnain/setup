@@ -398,15 +398,17 @@ bash_config() {
     mv -f "$tmp" "$rc"
 
     say "Set Git Bash as the VS Code terminal..."
-    local script settings
+    local script settings theme
     script="$(mktemp)"
+    theme="$(mktemp)"
     fetch dotfile/bash/vscode-terminal.js > "$script"
+    fetch dotfile/terminal/theme.json > "$theme"
     settings="$(cygpath -w "$APPDATA")\\Code\\User\\settings.json"
-    mise exec -- node "$(cygpath -w "$script")" "$settings" windows 'C:\Program Files\Git\bin\bash.exe'
-    rm -f "$script"
+    mise exec -- node "$(cygpath -w "$script")" "$settings" windows 'C:\Program Files\Git\bin\bash.exe' "$(cygpath -w "$theme")"
+    rm -f "$script" "$theme"
 }
 
-# Windows Terminal: make the Git Bash profile the default. Only the defaultProfile line is rewritten.
+# Windows Terminal: Git Bash as the default profile, and the Setup Dark color scheme
 windows_terminal_default() {
     local file="$LOCAL_APP/Packages/Microsoft.WindowsTerminal_8wekyb3d8bbwe/LocalState/settings.json"
     if [[ ! -f "$file" ]]; then
@@ -414,13 +416,15 @@ windows_terminal_default() {
         return 0
     fi
 
-    say "Set Windows Terminal default profile to Git Bash..."
+    say "Set Windows Terminal to Git Bash with the Setup Dark color scheme..."
     if [[ $DRY -eq 1 ]]; then return 0; fi
-    local script
+    local script theme
     script="$(mktemp)"
+    theme="$(mktemp)"
     fetch dotfile/bash/windows-terminal.js > "$script"
-    mise exec -- node "$script" "$(cygpath -w "$file")"
-    rm -f "$script"
+    fetch dotfile/terminal/theme.json > "$theme"
+    mise exec -- node "$script" "$(cygpath -w "$file")" "$(cygpath -w "$theme")"
+    rm -f "$script" "$theme"
 }
 
 main() {
