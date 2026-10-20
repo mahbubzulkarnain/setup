@@ -136,6 +136,13 @@ mise_tools() {
     mise exec -- dart pub global activate fvm
 }
 
+# find-skills agent skill (vercel-labs/skills), installed globally so every agent can discover skills
+find_skills() {
+    say "Install find-skills skill (global)..."
+    if [[ $DRY -eq 1 ]]; then return 0; fi
+    mise exec -- npx -y skills add vercel-labs/skills --skill find-skills -g -y
+}
+
 git_config() {
     if ! have git; then
         warn "git not found, skipping git config."
@@ -441,6 +448,7 @@ main() {
     done
     ensure_hermes
     mise_tools
+    find_skills
     git_config
     vimrc
     starship_config

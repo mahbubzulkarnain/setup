@@ -30,3 +30,6 @@ mise upgrade "npm:@kilocode/cli"
 # FVM (Flutter version manager) is installed with Dart from mise, so it works the same on every OS
 echo "Install FVM (latest) via Dart pub..."
 mise exec -- dart pub global activate fvm
+
+# find-skills agent skill (vercel-labs/skills), installed globally so every agent can discover skills
+mise exec -- npx -y skills add vercel-labs/skills --skill find-skills -g -y

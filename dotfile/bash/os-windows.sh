@@ -25,3 +25,7 @@ if command -v mise >/dev/null 2>&1; then
     JAVA_HOME="$(mise where java 2>/dev/null | tr -d '\r')"
     if [ -n "$JAVA_HOME" ]; then export JAVA_HOME; JAVA_HOME="$(cygpath -u "$JAVA_HOME")"; fi
 fi
+
+# fvm is a .bat file on Windows, and Git Bash cannot run .bat files by name.
+# Run it through cmd so the flutter, dart, and pub aliases in common.sh work.
+fvm() { cmd //c fvm "$@"; }
