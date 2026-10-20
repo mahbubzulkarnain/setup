@@ -16,6 +16,7 @@ USER_HOME="$(cygpath -u "$USERPROFILE")"
 LOCAL_APP="$(cygpath -u "$LOCALAPPDATA")"
 TEMP_DIR="$(cygpath -u "$TEMP")"
 PLAESY_DIR="$LOCAL_APP/Plaesy/bin"
+MISE_SHIMS="$LOCAL_APP/mise/shims"
 PUB_BIN="$LOCAL_APP/Pub/Cache/bin"
 FVM_BIN="$USER_HOME/fvm/default/bin"
 PLAESY_VERSION=v0.0.1
@@ -134,6 +135,8 @@ mise_tools() {
     mise upgrade "npm:@kilocode/cli"
     # FVM (Flutter version manager) via Dart from mise
     mise exec -- dart pub global activate fvm
+    # Shims for global npm CLIs (n8n, pm2, ...) so apps that don't run a shell (FlyEnv) can find them
+    mise reshim
 }
 
 # find-skills agent skill (vercel-labs/skills), installed globally so every agent can discover skills
@@ -251,18 +254,19 @@ ensure_user_path() {
     local current new d
     local -a missing=()
     current="$(winps "[Environment]::GetEnvironmentVariable('Path','User')")"
-    for d in "$(cygpath -w "$FVM_BIN")" "$(cygpath -w "$PUB_BIN")" "$(cygpath -w "$PLAESY_DIR")"; do
+    # mise shims: .exe wrappers for mise-installed CLIs, so GUI apps (FlyEnv) that don't load the shell profile find them
+    for d in "$(cygpath -w "$FVM_BIN")" "$(cygpath -w "$PUB_BIN")" "$(cygpath -w "$PLAESY_DIR")" "$(cygpath -w "$MISE_SHIMS")"; do
         case ";$current;" in
             *";$d;"*) ;;
             *) missing+=("$d") ;;
         esac
     done
     if [[ ${#missing[@]} -eq 0 ]]; then
-        say "User PATH already has the Flutter and FVM folders, skipping."
+        say "User PATH already has the Flutter, FVM, plaesy and mise folders, skipping."
         return 0
     fi
 
-    say "Add Flutter and FVM folders to the user PATH..."
+    say "Add Flutter, FVM, plaesy and mise folders to the user PATH..."
     if [[ $DRY -eq 1 ]]; then return 0; fi
     new="$current"
     for d in "${missing[@]}"; do
