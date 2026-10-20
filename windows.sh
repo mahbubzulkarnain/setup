@@ -415,6 +415,29 @@ bash_config() {
     rm -f "$script" "$theme"
 }
 
+# mise in the PowerShell profile, so node/npm work in a new PowerShell window (mise's PATH is set by activation).
+# Windows PowerShell 5.1 is the one that matters here; the block is marked so a re-run replaces nothing.
+powershell_profile() {
+    say "Add mise to the PowerShell profile..."
+    if [[ $DRY -eq 1 ]]; then return 0; fi
+
+    local profile
+    profile="$(cygpath -u "$(winps '$PROFILE')")"
+    mkdir -p "$(dirname "$profile")"
+    touch "$profile"
+    if grep -q '^# >>> mise (setup repo)' "$profile"; then
+        say "PowerShell profile already has mise, skipping."
+        return 0
+    fi
+    cat >> "$profile" <<'EOF'
+
+# >>> mise (setup repo)
+$env:MISE_PWSH_CHPWD_WARNING = 0
+if (Get-Command mise -ErrorAction SilentlyContinue) { mise activate pwsh | Out-String | Invoke-Expression }
+# <<< mise (setup repo)
+EOF
+}
+
 # Windows Terminal: Git Bash as the default profile, and the Setup Dark color scheme
 windows_terminal_default() {
     local file="$LOCAL_APP/Packages/Microsoft.WindowsTerminal_8wekyb3d8bbwe/LocalState/settings.json"
@@ -460,6 +483,7 @@ main() {
     android_sdk
     vs_build_tools
     bash_config
+    powershell_profile
     windows_terminal_default
 
     echo
