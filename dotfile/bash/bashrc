@@ -3,6 +3,12 @@
 # Interactive shells only.
 [[ $- != *i* ]] && return
 
+# ble.sh (inline suggestions from history, grey text), if installed. Must load first and attach last.
+# ble.sh refuses to run with an empty $USER, which Git Bash can leave unset.
+export USER="${USER:-$(id -un)}"
+BLESH="$HOME/.local/share/blesh/ble.sh"
+[ -f "$BLESH" ] && . "$BLESH" --noattach
+
 CFG="$HOME/.config/bash"
 
 # Add a directory to PATH once, and only when it exists
@@ -25,3 +31,21 @@ esac
 [ -n "$OS_FILE" ] && [ -f "$CFG/$OS_FILE" ] && . "$CFG/$OS_FILE"
 [ -f "$CFG/common.sh" ] && . "$CFG/common.sh"
 [ -f "$HOME/.bashrc.local" ] && . "$HOME/.bashrc.local"
+
+[[ ${BLE_VERSION-} ]] && ble-attach
+# Hide every "[ble: ...]" marker (failed-command exit code, slow-command time, EOL mark). ble.sh builds all
+# of them from these two formats, so an empty format removes them. Prompts that ask a question still show.
+[[ ${BLE_VERSION-} ]] && bleopt edit_marker= edit_marker_error=
+[[ ${BLE_VERSION-} ]] && bleopt exec_errexit_mark=
+# No "[ble: EOF]" after output that does not end with a newline (for example printf without \n).
+[[ ${BLE_VERSION-} ]] && bleopt prompt_eol_mark=
+
+# ble.sh runs its own prompt hooks (blehook PRECMD) and drops PROMPT_COMMAND, so the hooks in common.sh
+# (zoxide, prompt watchdog) would never run in ble sessions. Register them there, in the same order.
+if [[ ${BLE_VERSION-} ]] && declare -F __prompt_end >/dev/null; then
+    blehook PRECMD-=starship_precmd
+    blehook PRECMD+=__prompt_begin
+    blehook PRECMD+=starship_precmd
+    blehook PRECMD+=__zoxide_hook_on_cd
+    blehook PRECMD+=__prompt_end
+fi

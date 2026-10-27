@@ -1,0 +1,4 @@
+# Shell scripts and bashrc must stay LF (bash and shellcheck break on CR), even on Windows checkouts
+*.sh text eol=lf
+dotfile/bash/bashrc text eol=lf
+dotfile/starship/starship.toml text eol=lf

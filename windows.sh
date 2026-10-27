@@ -35,6 +35,7 @@ PACKAGES=(
     "JesseDuffield.lazygit lazygit"
     "jdx.mise mise"
     "Starship.Starship starship"
+    "Microsoft.PowerShell pwsh"
     "ajeetdsouza.zoxide zoxide"
     "junegunn.fzf fzf"
     "ezwinports.make make"
@@ -408,41 +409,89 @@ bash_config() {
     fi
     mv -f "$tmp" "$rc"
 
-    say "Set Git Bash as the VS Code terminal..."
-    local script settings theme
-    script="$(mktemp)"
-    theme="$(mktemp)"
-    fetch dotfile/bash/vscode-terminal.js > "$script"
-    fetch dotfile/terminal/theme.json > "$theme"
-    settings="$(cygpath -w "$APPDATA")\\Code\\User\\settings.json"
-    mise exec -- node "$(cygpath -w "$script")" "$settings" windows 'C:\Program Files\Git\bin\bash.exe' "$(cygpath -w "$theme")"
-    rm -f "$script" "$theme"
 }
 
-# mise in the PowerShell profile, so node/npm work in a new PowerShell window (mise's PATH is set by activation).
-# Windows PowerShell 5.1 is the one that matters here; the block is marked so a re-run replaces nothing.
-powershell_profile() {
-    say "Add mise to the PowerShell profile..."
+# PSReadLine gives PowerShell its grey suggestions, and needs 2.1 or newer. Windows PowerShell 5.1 ships 2.0.0,
+# so install the current one for this user (no admin needed). PowerShell 7 already has a new enough one.
+psreadline_install() {
+    say "Install PSReadLine (PowerShell suggestions)..."
     if [[ $DRY -eq 1 ]]; then return 0; fi
 
-    local profile
-    profile="$(cygpath -u "$(winps '$PROFILE')")"
-    mkdir -p "$(dirname "$profile")"
-    touch "$profile"
-    if grep -q '^# >>> mise (setup repo)' "$profile"; then
-        say "PowerShell profile already has mise, skipping."
+    local ok
+    ok="$(winps "if ((Get-Module -ListAvailable PSReadLine | Sort-Object Version -Descending | Select-Object -First 1).Version -ge [version]'2.1') { 'yes' }")"
+    if [[ "$ok" == "yes" ]]; then
+        say "PSReadLine 2.1 or newer already installed, skipping."
         return 0
     fi
-    cat >> "$profile" <<'EOF'
-
-# >>> mise (setup repo)
-$env:MISE_PWSH_CHPWD_WARNING = 0
-if (Get-Command mise -ErrorAction SilentlyContinue) { mise activate pwsh | Out-String | Invoke-Expression }
-# <<< mise (setup repo)
-EOF
+    winps "[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12; Install-Module PSReadLine -Scope CurrentUser -Force" \
+        || warn "PSReadLine install failed. In PowerShell run: Install-Module PSReadLine -Scope CurrentUser -Force"
 }
 
-# Windows Terminal: Git Bash as the default profile, and the Setup Dark color scheme
+# Append a marked block to a PowerShell profile. The marker is checked first, so a re-run adds nothing twice.
+ps_profile_block() {
+    local profile="$1" marker="$2" body="$3"
+    mkdir -p "$(dirname "$profile")"
+    touch "$profile"
+    # Replace an older copy of this block, so a re-run applies changes to it
+    if grep -qF "# >>> $marker" "$profile"; then
+        sed -i "/^# >>> $marker\$/,/^# <<< $marker\$/d" "$profile"
+    fi
+    printf '\n# >>> %s\n%s\n# <<< %s\n' "$marker" "$body" "$marker" >> "$profile"
+}
+
+# Profiles for Windows PowerShell 5.1 and PowerShell 7. Each gets mise (node/npm in a new window)
+# and history suggestions in grey. Windows PowerShell 5.1 is the one that matters most here.
+powershell_profile() {
+    say "Add mise and suggestions to the PowerShell profiles..."
+    if [[ $DRY -eq 1 ]]; then return 0; fi
+
+    local mise_body suggest_body profile pwsh7 pwsh_profile
+    # --shims: no hook on every prompt, so each command returns at once (same reason as common.sh)
+    mise_body='$env:MISE_PWSH_CHPWD_WARNING = 0
+if (Get-Command mise -ErrorAction SilentlyContinue) { mise activate pwsh --shims | Out-String | Invoke-Expression }'
+    suggest_body='Import-Module PSReadLine -ErrorAction SilentlyContinue
+if ((Get-Module PSReadLine).Version -ge [version]"2.1") { Set-PSReadLineOption -PredictionSource History -PredictionViewStyle InlineView }'
+
+    profile="$(cygpath -u "$(winps '$PROFILE')")"
+    ps_profile_block "$profile" "mise (setup repo)" "$mise_body"
+    ps_profile_block "$profile" "suggestions (setup repo)" "$suggest_body"
+
+    # PowerShell 7 from winget is an MSIX install (WindowsApps alias) or an MSI (Program Files), so check both
+    pwsh7="$(command -v pwsh || true)"
+    [[ -n "$pwsh7" ]] || pwsh7="$(cygpath -u "$PROGRAMFILES")/PowerShell/7/pwsh.exe"
+    if [[ -x "$pwsh7" ]]; then
+        pwsh_profile="$(cygpath -u "$("$pwsh7" -NoProfile -Command '$PROFILE' | tr -d '\r')")"
+        ps_profile_block "$pwsh_profile" "mise (setup repo)" "$mise_body"
+        ps_profile_block "$pwsh_profile" "suggestions (setup repo)" "$suggest_body"
+    fi
+}
+
+# ble.sh for Git Bash: grey inline suggestions from history, like fish. Built with make into ~/.local
+blesh_install() {
+    local dir="$USER_HOME/.local/share/blesh"
+    say "Install ble.sh (Git Bash suggestions)..."
+    if [[ -f "$dir/ble.sh" ]]; then
+        say "ble.sh already installed, skipping."
+        return 0
+    fi
+    if [[ $DRY -eq 1 ]]; then return 0; fi
+    if ! have make; then
+        warn "make not found, so ble.sh was not installed. Re-run setup after make is installed."
+        return 0
+    fi
+
+    local src
+    src="$(mktemp -d)"
+    if git clone --recursive --depth 1 --shallow-submodules https://github.com/akinomyoga/ble.sh.git "$src/ble.sh" \
+        && make -C "$src/ble.sh" install PREFIX="$USER_HOME/.local" >/dev/null; then
+        say "ble.sh installed."
+    else
+        warn "ble.sh install failed. Re-run setup to retry."
+    fi
+    rm -rf "$src"
+}
+
+# Windows Terminal: Git Bash as the default profile, and the theme color scheme (dotfile/terminal/theme.json)
 windows_terminal_default() {
     local file="$LOCAL_APP/Packages/Microsoft.WindowsTerminal_8wekyb3d8bbwe/LocalState/settings.json"
     if [[ ! -f "$file" ]]; then
@@ -450,7 +499,7 @@ windows_terminal_default() {
         return 0
     fi
 
-    say "Set Windows Terminal to Git Bash with the Setup Dark color scheme..."
+    say "Set Windows Terminal to Git Bash with the theme color scheme..."
     if [[ $DRY -eq 1 ]]; then return 0; fi
     local script theme
     script="$(mktemp)"
@@ -487,6 +536,8 @@ main() {
     android_sdk
     vs_build_tools
     bash_config
+    blesh_install
+    psreadline_install
     powershell_profile
     windows_terminal_default
 

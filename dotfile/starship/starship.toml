@@ -1,70 +1,27 @@
 # Starship prompt (https://starship.rs/config/)
-# Replaces the old oh-my-zsh "zul" theme. Same two-line layout:
-#   user in ~/path on git:branch ✗ or ✓
-#   ›
+"$schema" = 'https://starship.rs/config-schema.json'
 
-format = """
-$username\
-$directory\
-$git_branch\
-$git_status\
-$custom\
-$line_break\
-$character"""
+format = '$all$character'
 
-# git_clean runs git in every directory, so allow more than the default 500ms
+# git modules run git in every directory, so allow more than the default 500ms
 command_timeout = 2000
+
+# Directory scans (the directory and git modules) time out at the 30ms default on big or slow folders
+scan_timeout = 500
 
 [username]
 show_always = true
-style_user = "bold green"
+style_user = "white"
 style_root = "bold red"
 format = "[$user]($style) "
 
 [directory]
-style = "bold yellow"
-format = "in [$path]($style) "
-truncation_length = 10
+style = "white"
+format = "[in](bright-black) [$path]($style) "
 truncate_to_repo = false
 
 [git_branch]
-symbol = "git:"
-style = "cyan"
-format = "on [$symbol$branch]($style) "
-
-# Shows ✗ when the working tree has changes (tracked or untracked).
-# Empty format variables keep the module silent when the tree is clean.
-[git_status]
-style = "red"
-format = "[$all_status]($style)"
-ahead = ""
-behind = ""
-diverged = ""
-up_to_date = ""
-stashed = ""
-conflicted = "✗"
-modified = "✗"
-staged = "✗"
-untracked = "✗"
-deleted = "✗"
-renamed = "✗"
-typechanged = "✗"
-
-# Shows ✓ only when the working tree is clean (no tracked changes, no untracked files).
-[custom.git_clean]
-when = "git rev-parse --is-inside-work-tree && git diff-index --quiet HEAD -- && [ -z \"$(git ls-files --others --exclude-standard)\" ]"
-shell = ["sh"]
-command = "echo ok"
-format = "[✓]($style) "
-style = "bold green"
-
-# Latest commit in the current repo: short hash and subject, dimmed. Silent outside a repo.
-[custom.git_last_commit]
-when = "git rev-parse --is-inside-work-tree >/dev/null 2>&1"
-shell = ["sh"]
-command = "git log -1 --format='%h:%s' | cut -c1-60"
-format = "[$output]($style) "
-style = "bright-black"
+symbol = ""
 
 [character]
 success_symbol = "[›](bold white)"

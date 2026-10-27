@@ -74,33 +74,9 @@ install_config() {
     fi
 }
 
-set_vscode_terminal() {
-    local settings os_key bash_path script theme
-    script=$(mktemp)
-    theme=$(mktemp)
-    curl -fsSL "$RAW/dotfile/bash/vscode-terminal.js" -o "$script"
-    curl -fsSL "$RAW/dotfile/terminal/theme.json" -o "$theme"
-
-    if [[ "$OSTYPE" == "darwin"* ]]; then
-        settings="$HOME/Library/Application Support/Code/User/settings.json"
-        os_key=osx
-        # Homebrew's bash, not the 3.2 one in /bin
-        bash_path="$(brew --prefix)/bin/bash"
-    else
-        settings="$HOME/.config/Code/User/settings.json"
-        os_key=linux
-        bash_path="$(command -v bash)"
-    fi
-
-    echo "Set bash as the VS Code terminal and apply best-practice settings..."
-    mise exec -- node "$script" "$settings" "$os_key" "$bash_path" "$theme"
-    rm -f "$script" "$theme"
-}
-
 echo "Install bash config..."
 install_tools
 install_config
-set_vscode_terminal
 echo "Bash setup complete. The login shell is unchanged."
 if [[ "$OSTYPE" == "darwin"* ]]; then
     echo "To make bash the default in Terminal: sudo sh -c 'echo $(brew --prefix)/bin/bash >> /etc/shells' && chsh -s $(brew --prefix)/bin/bash"

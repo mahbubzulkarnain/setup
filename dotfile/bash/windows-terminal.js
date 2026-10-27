@@ -75,9 +75,24 @@ if (themeFile) {
     }
 }
 
+// Optional font size (points) for every profile, from the third argument. Set it in profiles.defaults.font.size.
+const fontSize = process.argv[4];
+if (fontSize) {
+    // Only inside profiles.defaults: its own members, with one level of nested braces (the font object)
+    const sizeRe = /("defaults":\s*\{(?:[^{}]|\{[^{}]*\})*?"font":\s*\{[^}]*?"size":\s*)\d+/;
+    if (sizeRe.test(text)) {
+        const before = text;
+        text = text.replace(sizeRe, `$1${Number(fontSize)}`);
+        if (text !== before) changed = true;
+    } else if (!/"defaults":\s*\{\s*\}/.test(text)) {
+        text = text.replace(/("defaults":\s*\{)/, `$1\n            "font": {\n                "size": ${Number(fontSize)}\n            },`);
+        changed = true;
+    }
+}
+
 if (!changed) {
-    console.log('Windows Terminal default is already Git Bash, skipping.');
+    console.log('Windows Terminal is already up to date with the theme, nothing changed.');
     process.exit(0);
 }
 fs.writeFileSync(file, text);
-console.log('Updated Windows Terminal: Git Bash default profile and the Setup Dark color scheme.');
+console.log('Updated Windows Terminal: Git Bash default profile and the theme color scheme.');
