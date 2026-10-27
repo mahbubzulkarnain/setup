@@ -3,12 +3,6 @@
 
 format = '$all$character'
 
-# git modules run git in every directory, so allow more than the default 500ms
-command_timeout = 2000
-
-# Directory scans (the directory and git modules) time out at the 30ms default on big or slow folders
-scan_timeout = 500
-
 [username]
 show_always = true
 style_user = "white"
@@ -16,13 +10,53 @@ style_root = "bold red"
 format = "[$user]($style) "
 
 [directory]
-style = "white"
-format = "[in](bright-black) [$path]($style) "
+style = "bold yellow"
 truncate_to_repo = false
+truncation_length = 0
 
-[git_branch]
-symbol = ""
+[direnv]
+disabled= false
+
+[cmd_duration]
+disabled = true
+show_notifications = true
 
 [character]
-success_symbol = "[›](bold white)"
+success_symbol = "[›](white)"
 error_symbol = "[›](red)"
+
+# GIT
+[git_branch]
+symbol = ""
+format = "[$symbol$branch]($style) "
+style = "bold cyan"
+
+[git_status]
+disabled = false
+
+# Claude
+
+[profiles]
+claude-code = "$directory $git_branch $claude_model$claude_context$claude_cost"
+
+# Claude Code custom modules (lightweight, only if env vars exist)
+[custom.claude_model]
+disabled = false
+command = 'echo "${CLAUDE_MODEL:-}"'
+when = '[ -n "$CLAUDE_MODEL" ]'
+style = "bold blue"
+format = "[$output]($style) "
+
+[custom.claude_context]
+disabled = false
+command = 'echo "${CLAUDE_CONTEXT_REMAINING:-}"'
+when = '[ -n "$CLAUDE_CONTEXT_REMAINING" ]'
+style = "yellow"
+format = "context:[$output]($style) "
+
+[custom.claude_cost]
+disabled = false
+command = 'echo "${CLAUDE_COST:-}"'
+when = '[ -n "$CLAUDE_COST" ]'
+style = "magenta"
+format = "cost:[$output]($style)"

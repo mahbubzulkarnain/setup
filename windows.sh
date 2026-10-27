@@ -186,6 +186,52 @@ starship_config() {
     fetch dotfile/starship/starship.toml > "$USER_HOME/.config/starship.toml"
 }
 
+claude_statusline() {
+    say "Configure Claude Code statusLine..."
+    if [[ $DRY -eq 1 ]]; then return 0; fi
+
+    local settings="$USER_HOME/.claude/settings.json"
+    mkdir -p "$(dirname "$settings")"
+
+    local script config
+    script="$(mktemp --suffix=.js)"
+    cat > "$script" <<'EOF'
+const fs = require('fs');
+const path = process.argv[2];
+
+let settings = {};
+try {
+    if (fs.existsSync(path)) {
+        settings = JSON.parse(fs.readFileSync(path, 'utf8'));
+    }
+} catch (e) {
+    console.error('Error reading settings:', e.message);
+    process.exit(1);
+}
+
+// Add statusLine if not already configured
+if (!settings.statusLine) {
+    settings.statusLine = {
+        type: "command",
+        command: "starship statusline claude-code"
+    };
+
+    try {
+        fs.writeFileSync(path, JSON.stringify(settings, null, 2) + '\n', 'utf8');
+        console.log('statusLine configured');
+    } catch (e) {
+        console.error('Error writing settings:', e.message);
+        process.exit(1);
+    }
+} else {
+    console.log('statusLine already configured');
+}
+EOF
+
+    mise exec -- node "$script" "$(cygpath -m "$settings")"
+    rm -f "$script"
+}
+
 # plaesy spec-kit: release binary verified against the release's SHA256SUMS (same logic as plaesy.sh)
 plaesy_install() {
     local bin="$PLAESY_DIR/plaesy.exe"
@@ -446,9 +492,10 @@ powershell_profile() {
     if [[ $DRY -eq 1 ]]; then return 0; fi
 
     local mise_body suggest_body profile pwsh7 pwsh_profile
-    # --shims: no hook on every prompt, so each command returns at once (same reason as common.sh)
+    # --shims: no hook on every prompt, so each command returns at once (same reason as common.sh).
+    # Once the shims folder is on the user PATH, mise prints nothing, so skip Invoke-Expression then.
     mise_body='$env:MISE_PWSH_CHPWD_WARNING = 0
-if (Get-Command mise -ErrorAction SilentlyContinue) { mise activate pwsh --shims | Out-String | Invoke-Expression }'
+if (Get-Command mise -ErrorAction SilentlyContinue) { $miseInit = mise activate pwsh --shims | Out-String; if ($miseInit.Trim()) { Invoke-Expression $miseInit } }'
     suggest_body='Import-Module PSReadLine -ErrorAction SilentlyContinue
 if ((Get-Module PSReadLine).Version -ge [version]"2.1") { Set-PSReadLineOption -PredictionSource History -PredictionViewStyle InlineView }'
 
@@ -530,6 +577,7 @@ main() {
     starship_config
     plaesy_install
     claude_install
+    claude_statusline
     enable_developer_mode
     flutter_setup
     ensure_user_path
