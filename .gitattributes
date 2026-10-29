@@ -1,4 +1,10 @@
-# Shell scripts and bashrc must stay LF (bash and shellcheck break on CR), even on Windows checkouts
-*.sh text eol=lf
-dotfile/bash/bashrc text eol=lf
-dotfile/starship/starship.toml text eol=lf
+# Store text files with LF in the repo and check them out with LF on every OS.
+# Shell scripts and bashrc must stay LF (bash and shellcheck break on CR), even on Windows checkouts.
+* text=auto eol=lf
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ico binary
+*.pdf binary
+*.zip binary
