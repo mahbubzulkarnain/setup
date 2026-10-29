@@ -31,17 +31,21 @@ __zoxide_hook_on_cd() {
 PROMPT_COMMAND="${PROMPT_COMMAND//__zoxide_hook/__zoxide_hook_on_cd}"
 # zoxide 0.10's init passes "\builtin pwd -L" to cygpath as one quoted argument, so every folder is stored as
 # "C:\builtin pwd -L" and `z` never finds anything on Git Bash. Use the real folder instead.
-__zoxide_pwd() { cygpath -w "$(builtin pwd -L)"; }
+if have cygpath; then
+    __zoxide_pwd() { cygpath -w "$(builtin pwd -L)"; }
+fi
 __zoxide_oldpwd=""
 # `z` to the folder you are already in makes zoxide exit 1 ("already in the only match"), and ble.sh prints
 # [ble: exit 1] for it. Return 0 in that case. Real misses ("no match found") still come from zoxide.
-z() {
-    local target
-    if [ "$#" -gt 0 ] && target=$(zoxide query -- "$@" 2>/dev/null) && [ "$target" = "$(__zoxide_pwd)" ]; then
-        return 0
-    fi
-    __zoxide_z "$@"
-}
+if have zoxide; then
+    z() {
+        local target
+        if [ "$#" -gt 0 ] && target=$(zoxide query -- "$@" 2>/dev/null) && [ "$target" = "$(__zoxide_pwd)" ]; then
+            return 0
+        fi
+        __zoxide_z "$@"
+    }
+fi
 # --shims: no hook on every prompt (that hook made each command wait). Tools still run through mise's shims.
 have mise && __init_cached mise mise activate bash --shims
 have fzf && __init_cached fzf fzf --bash     # Ctrl+R history, Ctrl+T files, Alt+C folders
